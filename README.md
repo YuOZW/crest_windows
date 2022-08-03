@@ -1,5 +1,5 @@
 ## Cygwin
-�ȉ��̃��C�u�������K�v
+以下のライブラリが必要
 - git
 - make
 - mingw64-x86_64-gcc-core
@@ -14,13 +14,16 @@ make PREFIX=~/bin/OpenBLAS-0.3.17 install
 ```
 
 ## crest
-src/Makefile��ҏW����B`(username)`��ݒ�B
+- `/dev/null`を`nul`に変更
+- ファイルパス内の`/`を`\\`に変更
+- 文字化けする文字を変更
+- iomod.F90内の`symlink`関数を`symlink.bat`を呼び出す形でWindows用に変更
+- iomod.F90内の`setenv`関数はWindows用に変更できなかったため無効化
 
 ```
-cd src
 make
 ```
-�ȉ��̃��C�u�������K�v
+以下のライブラリが必要
 - libgcc_s_seh-1.dll
 - libgfortran-5.dll
 - libgomp-1.dll
