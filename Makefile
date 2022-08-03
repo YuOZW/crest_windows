@@ -1,9 +1,6 @@
-PROG = ~/bin/crest
+PROG = 'bin/crest'
 
 OBJDIR = build
-#--------------------------------------------------------------------------
- OSTYPE=LINUXI
- #MKLROOT=/opt/intel/mkl
 #--------------------------------------------------------------------------
 
 MODULES += classes.o 
@@ -23,11 +20,9 @@ CFILES += symmetry2.o
 CFILES += symmetry_i.o
 CFILES += signal.o
 CFILES += sigterm.o
-CFILES += 
 
 OBJS1 += data.o
 OBJS1 += io.o
-OBJS1 +=
 
 OBJS2 += flexi.o
 OBJS2 += trialmd.o
@@ -73,7 +68,6 @@ OBJS3 += trackorigin.o
 OBJS3 += utilities.o
 OBJS3 += xtbmodef.o
 OBJS3 += zsort.o
-OBJS3 +=
 
 OBJS4 += geo.o
 OBJS4 += ztopology.o
@@ -110,47 +104,14 @@ vpath % $(SUBDIRS)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 #--------------------------------------------------------------------------
 
-ifeq ($(OSTYPE),LINUXI)
-  PREOPTS :=
-  FC := ifort
-  CC := icc
-  LINKER = ifort -g -O -static -fopenmp  -I$(MKLROOT)/include/intel64/lp64 -I$(MKLROOT)/include
-#  LINKER = ifort -static -fopenmp  -I$(MKLROOT)/include/intel64/lp64 -I$(MKLROOT)/include
-#  LIBS = $(MKLROOT)/lib/intel64/libmkl_blas95_lp64.a $(MKLROOT)/lib/intel64/libmkl_lapack95_lp64.a -Wl,--start-group $(MKLROOT)/lib/intel64/libmkl_intel_lp64.a $(MKLROOT)/lib/intel64/libmkl_core.a $(MKLROOT)/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -lpthread -lm
-  LIBS := -Wl,--start-group $(MKLROOT)/lib/intel64/libmkl_intel_lp64.a $(MKLROOT)/lib/intel64/libmkl_core.a $(MKLROOT)/lib/intel64/libmkl_intel_thread.a -Wl,--end-group 
-  PREFLAG := -E -P
-  FFLAGS := -g -O -qopenmp -align array64byte -module $(OBJDIR)
-#  FFLAGS := -g -O0
-#  FFLAGS := -O -axAVX -qopenmp -align array64byte 
-#  FFLAGS += -check all -g -debug all -traceback -fpe0
-  FFLAGS += -traceback
-  CCFLAGS += -D_Float128=__float128
-  CCFLAGS := -O -DLINUX
-endif
+FC := x86_64-w64-mingw32-gfortran
+CC := x86_64-w64-mingw32-gcc
 
-ifeq ($(OSTYPE),LINUXG)
-  PREOPTS :=
-  FC := gfortran
-  CC := gcc
-  LINKER := gfortran -static-libgfortran -fopenmp 
-  LIBS :=
-  PREFLAG :=
-  FFLAGS :=  -J$(MODDIR)
-  CCFLAGS := -O -DLINUX
-endif
+LINKER := $(FC) -fopenmp
+LIBS := '$(HOME)/bin/OpenBLAS-0.3.17/lib/libopenblas.a' '$(HOME)/bin/OpenBLAS-0.3.17/lib/libopenblas.dll.a'
 
-
-ifeq ($(OSTYPE),SOMETHINGELSE)
-  PREOPTS :=
-  FC := 
-  CC := 
-  LINKER := 
-  LIBS :=
-  PREFLAG := 
-  FFLAGS := 
-  CCFLAGS := 
-endif
-
+FFLAGS := -O2 -fopenmp -I'$(HOME)/bin/OpenBLAS-0.3.17/include'
+CCFLAGS := -O2
 
 .PHONY: all
 .PHONY: setup
@@ -163,15 +124,6 @@ setup: $(OBJDIR)
 #--------------------------------------------------------------------------
 # Setting the rules to make the object files:
 #--------------------------------------------------------------------------
-# implizite Regel zur Erzeugung von *.o aus *.F ausschalten
-%.o: %.F
-fortran.o : $(CUDA)/src/fortran.c
-	gcc $(CCFLAGS) -I$(CUDA)/src/ $(INC) -c  $(CUDA)/src/fortran.c
-
-# aus *.F mache ein *.f
-%.f: %.F
-	@echo "making $@ from $<"
-	$(FC) $(PREFLAG) $(PREOPTS) $< -o $@
 
 # aus *.f mache ein *.o
 $(OBJDIR)/%.o: %.f
@@ -200,7 +152,7 @@ $(OBJDIR):
 
 #aufraeumen
 clean:
-	rm -f $(filter %.o,$(OBJS)) $(PROG) 
-	rm -f $(OBJDIR)/*.mod *.mod $(PROG) 
+	rm -f $(filter %.o,$(OBJS)) $(PROG)
+	rm -f $(OBJDIR)/*.mod *.mod $(PROG)
 	rm -f $(patsubst %.F, %.f, $(wildcard *.F))
 

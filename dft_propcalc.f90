@@ -45,11 +45,11 @@ subroutine dftrc_reader(env,b973c)
       if(allocated(env%dftrcfile))then
       rcfile=env%dftrcfile
       else
-      rcfile='~/.dftrc'
+      rcfile='~\\.dftrc'
       endif 
       inquire(file=rcfile,exist=ex)
-      inquire(file='~/.dftrc',exist=ex2)
-      if(.not.ex .and. ex2) rcfile='~/.dftrc' !fall back to .dftrc if the given rc file is non existent
+      inquire(file='~\\.dftrc',exist=ex2)
+      if(.not.ex .and. ex2) rcfile='~\\.dftrc' !fall back to .dftrc if the given rc file is non existent
 
 !----- defaults
       env%dftprog=1 ! =TM
@@ -277,7 +277,7 @@ subroutine xtbDFTdriver(env,xname,jobcall)
          qmprog=''
       end select QM
 
-      write(jobcall,'(a,1x,a,1x,a,1x,a,'' >xtb.out 2>/dev/null'')') &
+      write(jobcall,'(a,1x,a,1x,a,1x,a,'' >xtb.out 2>nul'')') &
       &    trim(env%ProgName),trim(xname),runtype,qmprog
       return
 end subroutine xtbDFTdriver
@@ -556,7 +556,7 @@ subroutine replaceGridsize(TMPCONF,g)!,eread)
 
       do i=1,TMPCONF
         write(dum,'(a,i0)')'TMPCONF',i
-        tmppath=trim(dum)//'/control'
+        tmppath=trim(dum)//'\\control'
         inquire(file=tmppath,exist=ex)
         
         if(ex)then

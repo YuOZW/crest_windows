@@ -74,7 +74,7 @@ subroutine xtbmodef(env,s,e,n,u,l,o,x)
          solv=''
       endif
 
-      pipe='2>/dev/null'
+      pipe='2>nul'
 
 
       TOTAL= e - s +1
@@ -173,10 +173,10 @@ subroutine xtbmodef(env,s,e,n,u,l,o,x)
          call getcwd(tmppath)
          call clearmodef()
 
-          str=trim(thispath)//'/'//'xtb_normalmodes'
+          str=trim(thispath)//'\\'//'xtb_normalmodes'
           io = sylnk(trim(str),'xtb_normalmodes')
 
-          str=trim(thispath)//'/'//'xtb_localmodes'
+          str=trim(thispath)//'\\'//'xtb_localmodes'
           io = sylnk(trim(str),'xtb_localmodes')
 
          call chdir(thispath)

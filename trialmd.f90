@@ -69,7 +69,7 @@ subroutine trialMD(env)
                      ! 50% = the last half
 
 
-      pipe=' > xtb.out 2>/dev/null'
+      pipe=' > xtb.out 2>nul'
 
       write(jobcall,'(a,1x,a,1x,a,'' --md '',a,a)') &
       &     trim(ProgName),trim(fname),trim(gfnver),trim(env%solv),pipe 

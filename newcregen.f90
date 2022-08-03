@@ -2889,7 +2889,7 @@ subroutine cregen_pr3(ch,infile,nall,comments)
     write(ch,'(a)')'==================================================='
     write(ch,'(a,a,a)')' written to file <',trim(infile),'>'
     write(ch,*)
-    write(ch,'(''   structure    ΔE(kcal/mol)    Etot(Eh)'')')
+    write(ch,'(''   structure    deltaE(kcal/mol)    Etot(Eh)'')')
     do i=1,nall
       dE=(er(i)-er(1))*autokcal
       write(ch,'(i10,3x,F12.2,2x,F14.6)') i,dE,er(i)

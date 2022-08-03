@@ -145,7 +145,7 @@ subroutine msreact(mso,mol,nat,pair,nbonds)
       call msreact_jobber(np,'Pair_',.false.)
 
       call msreact_collect(mol%nat,np,'products.xyz')
-      call rename(subdir//'/'//'products.xyz','products.xyz')
+      call rename(subdir//'\\'//'products.xyz','products.xyz')
       call chdir(thisdir)
       return
 end subroutine msreact
@@ -174,17 +174,17 @@ subroutine isodir(mso,dirname,mol,A,B,D)
 
     io = makedir(dirname) !create the directory
     
-    fname = trim(dirname)//'/'//'struc.xyz'
+    fname = trim(dirname)//'\\'//'struc.xyz'
     open(newunit=ich,file=fname)
     call wrxyz(ich,mol%nat,mol%at,mol%xyz)
     close(ich)
 
-    fname = trim(dirname)//'/'//'.CHRG'
+    fname = trim(dirname)//'\\'//'.CHRG'
     open(newunit=ich,file=fname)
     write(ich,'(i0)') mol%chrg + 1   ! EI +1, DEA -1, CID 0
     close(ich)
 
-    fname = trim(dirname)//'/'//'.xc1'
+    fname = trim(dirname)//'\\'//'.xc1'
     open(newunit=ich, file=fname)
     write(ich,'(a)') '$scc'
     write(dumm,'(f16.2)') mso%T
@@ -195,7 +195,7 @@ subroutine isodir(mso,dirname,mol,A,B,D)
     write(ich,'(3x,a,1x,i0,a,1x,i0,a,1x,f8.5)') 'distance:',A,',',B,',',D
     close(ich)
 
-    fname = trim(dirname)//'/'//'.xc2'
+    fname = trim(dirname)//'\\'//'.xc2'
     open(newunit=ich, file=fname)
     write(ich,'(a)') '$scc'
     write(dumm,'(f16.2)') mso%T
@@ -228,8 +228,8 @@ subroutine msreact_jobber(ndirs,base,niceprint)
     jobcall = ''
     jobcall2 = ''
 
-    write(jobcall,'(a)')  'xtb struc.xyz  --opt loose --input .xc1 > split.out 2>/dev/null'
-    write(jobcall2,'(a)') 'xtb xtbopt.xyz --opt crude --input .xc2 > xtb.out 2>/dev/null'
+    write(jobcall,'(a)')  'xtb struc.xyz  --opt loose --input .xc1 > split.out 2>nul'
+    write(jobcall2,'(a)') 'xtb xtbopt.xyz --opt crude --input .xc2 > xtb.out 2>nul'
     jobcall = trim(jobcall)//' ; '//trim(jobcall2)
 
     !-- directories must be numbered consecutively
@@ -335,7 +335,7 @@ subroutine msreact_collect(nat,np,outfile)
     do p2=1,np
        write(pdir,'(i0,i0,a,i0)')1,p+1,'Pair_',p2
        write(pdir,'(a,i0)')'Pair_',p2
-       optfile=trim(pdir)//'/'//'xtbopt.xyz'
+       optfile=trim(pdir)//'\\'//'xtbopt.xyz'
        inquire(file=optfile,exist=ex)
        if(ex)then
           call rdcoord(optfile,nat,at,xyz,etot)

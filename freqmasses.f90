@@ -115,9 +115,9 @@ subroutine rdcontrol(fname,oname,method,freqmode)
                dum=ctrl%line(m)
                if(len(dum).lt.81)then
                  i=max(0,(79-len_trim(dum)))
-                 dum=trim(dum)//repeat(' ',i)//'\'
+                 dum=trim(dum)//repeat(' ',i)//'\\'
                else
-                 dum(80:80)='\'
+                 dum(80:80)='\\'
                endif
                call ctrl%replace(m,dum)
                call ctrl%insert(mline,subblock(j+1))

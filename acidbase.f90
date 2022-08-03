@@ -203,7 +203,7 @@ subroutine ab_singlepoint(fname,env,bhess)
      logical :: bhess
      character(len=*) :: fname
      character(len=1024) :: jobcall
-     character(len=80),parameter :: pipe = ' > xtb.out 2>/dev/null'
+     character(len=80),parameter :: pipe = ' > xtb.out 2>nul'
      integer :: io
      if(.not.bhess)then
      write(jobcall,'(a,1x,a,1x,a,'' --wbo '',a,1x,a,a)') &

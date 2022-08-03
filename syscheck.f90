@@ -45,15 +45,12 @@ subroutine getpath(fname,path)
     character(len=:),allocatable :: pipe
     integer :: rcode,ich,io
 
-
-    pipe=' >/dev/null 2>/dev/null'
-
-    checkcall='command -v '//trim(fname)//pipe
+    pipe=' >nul 2>&1'
+    checkcall='where '//trim(fname)//pipe
     call execute_command_line(checkcall,.true.,rcode)
 
     if(rcode.eq.0)then
-      checkcall='command -v '//trim(fname)//' > pathout.tmp 2>/dev/null' 
-      !call system(checkcall)
+      checkcall='where '//trim(fname)//' > pathout.tmp 2>nul'
       call execute_command_line(trim(checkcall), exitstat=io)
       open(newunit=ich,file='pathout.tmp')
       read(ich,'(a)')path
@@ -76,12 +73,10 @@ subroutine checkprog(fname,r)
     character(len=:),allocatable :: pipe
     integer :: rcode,r
     character(len=512) :: path
-    
 
-    pipe=' >/dev/null 2>/dev/null'
-
-    checkcall='command -v '//trim(fname)//pipe
-    call execute_command_line(checkcall,.true.,rcode)     
+    pipe=' >nul 2>&1'
+    checkcall='where '//trim(fname)//pipe
+    call execute_command_line(checkcall,.true.,rcode)
 
     write(*,'(4x,a,a,a)')'binary: "',trim(fname),'"'
     if(rcode.ne.0)then
@@ -104,9 +99,8 @@ subroutine checkprog_secret(fname)
     character(len=:),allocatable :: pipe
     integer :: rcode
 
-    pipe=' >/dev/null 2>/dev/null'
-
-    checkcall='command -v '//trim(fname)//pipe
+    pipe=' >nul 2>&1'
+    checkcall='where '//trim(fname)//pipe
     call execute_command_line(checkcall,.true.,rcode)
 
     if(rcode.ne.0)then

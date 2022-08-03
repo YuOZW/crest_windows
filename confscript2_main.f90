@@ -1,4 +1,4 @@
-!================================================================================!
+﻿!================================================================================!
 ! This file is part of crest.
 !
 ! Copyright (C) 2018-2020 Philipp Pracht
@@ -427,7 +427,7 @@ subroutine V2mdlength(env)
   end if
 
   write (*,'(1x,''t(MTD) / ps    :'',  f8.1)') env%mdtime
-  write (*,'(1x,''Σ(t(MTD)) / ps :'',  f8.1,'' ('',i0,'' MTDs)'')') &
+  write (*,'(1x,''sum(t(MTD)) / ps :'',  f8.1,'' ('',i0,'' MTDs)'')') &
   & env%mdtime * float(env%nmetadyn),env%nmetadyn
 
   env%metadlist(:) = ceiling(env%mdtime)  !each ps of the MTD a Vbias snapshot is taken

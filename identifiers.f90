@@ -177,11 +177,11 @@ subroutine cosort(iname,oname,wrscoord,verbose)
       if(wrscoord)then
       write(ochan,'(a,a)')' written to <scoord.*> and ',trim(oname)
       write(ochan,*)
-      write(ochan,'('' scoord.*     ΔE(kcal/mol)   Etot(Eh)'')')
+      write(ochan,'('' scoord.*     deltaE(kcal/mol)   Etot(Eh)'')')
       else
       write(ochan,'(a,a,a)')' written to file <',trim(oname),'>'
       write(ochan,*)
-      write(ochan,'('' structure    ΔE(kcal/mol)   Etot(Eh)'')')
+      write(ochan,'('' structure    deltaE(kcal/mol)   Etot(Eh)'')')
       endif
 
       open(newunit=ich,file=oname)

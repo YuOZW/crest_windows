@@ -177,7 +177,7 @@ subroutine set_trj_origins(base,origin)
         if(.not.ex)then
           exit
         else
-          write(str,'(a,a,''xtb.trj'')')trim(dir),'/'
+          write(str,'(a,a,''xtb.trj'')')trim(dir),'\\'
           write(dir,'(a,i0)')trim(origin),i
           call addorigin(trim(str),trim(dir))
           i=i+1
@@ -206,7 +206,7 @@ subroutine set_trj_timestamps(base,nsplit)
         if(.not.ex)then
           exit
         else
-          write(str,'(a,a,''xtb.trj'')')trim(dir),'/'
+          write(str,'(a,a,''xtb.trj'')')trim(dir),'\\'
           call addtimestamp(trim(str),nsplit)
           i=i+1
         endif

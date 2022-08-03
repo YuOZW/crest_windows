@@ -206,10 +206,10 @@ subroutine nciflexi(env,flexval)
          logical :: ex
          real(wp) :: ehb,edisp
          real(wp) :: flexval
-         character(len=*),parameter ::  pipe=' > xtb.out 2>/dev/null'
+         character(len=*),parameter ::  pipe=' > xtb.out 2>nul'
 
 !---- some options
-         !pipe=' &> xtb.out 2>/dev/null'
+         !pipe=' &> xtb.out 2>nul'
          call remove('energy')
          call remove('charges')
          call remove('xtbrestart')

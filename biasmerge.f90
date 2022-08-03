@@ -317,7 +317,7 @@ subroutine biasmerge(env)
             env%cts%usermsdpot = .true.
             call getcwd(newcomment)
             write(atmp,'(a,i0,a,i0,a)')'rmsdpot-',ai,'-',ki,'.xyz'
-            env%cts%rmsdpotfile=trim(newcomment)//'/'//trim(atmp)
+            env%cts%rmsdpotfile=trim(newcomment)//'\\'//trim(atmp)
             open(newunit=ich,file=trim(atmp))
             emintry=0.0_wp
             mintry = 1
@@ -477,7 +477,7 @@ subroutine biasmerge(env)
   !--- some preperation if we want to automatically start a conf. sampling:     
        env%cts%usermsdpot = .true.
        call getcwd(newcomment)
-       env%cts%rmsdpotfile=trim(newcomment)//'/'//'rmsdpot.xyz' 
+       env%cts%rmsdpotfile=trim(newcomment)//'\\'//'rmsdpot.xyz' 
        !write(*,*) trim(env%cts%rmsdpotfile)
        env%optlev = optlevbackup
 

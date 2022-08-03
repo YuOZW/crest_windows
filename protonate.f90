@@ -126,8 +126,8 @@ subroutine protonate(env,tim)
      call smallhead('1. crude pre-optimization')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,protname,1)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         !write(*,*) trim(filename)
         call copy(trim(filename),'ensemble-test.xyz')
@@ -143,8 +143,8 @@ subroutine protonate(env,tim)
      call smallhead('2. loose optimization')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,inpnam,2)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         if(prot%ABcorrection)then
             call prot_correction(env,trim(filename))
@@ -157,8 +157,8 @@ subroutine protonate(env,tim)
      call smallhead('3. optimization with user-defined thresholds')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,inpnam,0)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         if(prot%ABcorrection)then
             call prot_correction(env,trim(filename))
@@ -199,7 +199,7 @@ subroutine xtblmo(env)
          character(len=512) :: jobcall
          integer :: io
 !---- some options
-         pipe=' > xtb.out 2>/dev/null'
+         pipe=' > xtb.out 2>nul'
 
 !---- setting threads
          if(env%autothreads)then

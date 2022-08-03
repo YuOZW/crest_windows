@@ -119,7 +119,7 @@ subroutine sort_ens(sort,infile,verbose)
         write(ochan,'(a)')'==================================================='
         write(ochan,'(a,a,a)')' written to file <',trim(infile),'>'
         write(ochan,*)
-        write(ochan,'('' structure    ΔE(kcal/mol)   Etot(Eh)'')')
+        write(ochan,'('' structure    deltaE(kcal/mol)   Etot(Eh)'')')
         do i=1,nall
         dE=(e_new(i)-e_new(1))*kcal
         write(ochan,'(i5,6x,F10.2,4x,F14.6)') i,dE,e_new(i)

@@ -712,7 +712,7 @@ subroutine reactorreopt(env,nat,at,nall,xyz,taken,frags,ndirs)
             n=frags(i)%grp(j)%mem(m)
             mask(n)=.true.
            enddo
-           xnam2=trim(ctmp)//'/'//xnam
+           xnam2=trim(ctmp)//'\\'//xnam
            call wrxyz(xnam2,nat,at,xyz(:,:,i)*bohr,mask)
           enddo JLOOP
       else
@@ -783,7 +783,7 @@ subroutine collectproducts(optdir,base,ndirs,oname,iso)
     path=''
     do i=1,ndirs
        write(atmp,'(a,i0)')base,i
-       path=optdir//'/'//trim(atmp)//'/'//'xtbopt.xyz'
+       path=optdir//'\\'//trim(atmp)//'\\'//'xtbopt.xyz'
        inquire(file=path,exist=ex)
        if(.not.ex) cycle !maybe some optimizations failed. they are cycled through.
        call rdnat(path,nats(i))

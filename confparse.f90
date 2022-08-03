@@ -1258,7 +1258,7 @@ subroutine parseflags(env,arg,nra)
         if (ex) then
           env%cts%usermsdpot = .true.
           call getcwd(atmp)
-          env%cts%rmsdpotfile = trim(atmp)//'/'//ctmp
+          env%cts%rmsdpotfile = trim(atmp)//'\\'//ctmp
           write (*,'(2x,a,a,a,a)') argument,': using <',ctmp,'> as bias'
         else
           write (*,'(a,a)') argument,': Warning! File could not be found!'

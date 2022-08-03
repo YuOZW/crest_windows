@@ -289,24 +289,24 @@ subroutine pkaquick(env,tim)
 !--- calculate the pKa via the free energy relationship
       call largehead2('pKa CALCULATION')
       write(*,*)
-      write(*,'(1x,a)') 'For the reaction AH + H₂O --->  A⁻ + H₃O⁺'
-      write(*,'(1x,a)') '(Note: H₂O/H₃O⁺ is not included in ΔG)'
+      write(*,'(1x,a)') 'For the reaction AH + H2O --->  A- + H3O+'
+      write(*,'(1x,a)') '(Note: H2O/H3O+ is not included in deltaG)'
       write(*,'(1x,a,f16.2,a)') 'T     =',T,' K'
       write(*,'(1x,a,f16.8,a)') 'G(AH) =',GA,' Eh'
 
       write(*,'(1x,a,f16.8,a)') 'G(A⁻) =',GB,' Eh' 
       dum = GB - GA
-      write(*,'(1x,a,f16.8,a,f8.2,a)') 'ΔG       =',dum,' Eh,',dum*kcal,' kcal/mol'
+      write(*,'(1x,a,f16.8,a,f8.2,a)') 'deltaG       =',dum,' Eh,',dum*kcal,' kcal/mol'
       dG = dum + dE
       if(env%ptb%pka_mode.ne.1)then
-      write(*,'(1x,a,f16.8,a,f8.2,a)') 'ΔG+Ecorr =',dG,' Eh,',dG*kcal,' kcal/mol'
+      write(*,'(1x,a,f16.8,a,f8.2,a)') 'deltaG+Ecorr =',dG,' Eh,',dG*kcal,' kcal/mol'
       endif
       write(*,*)
 
       write(*,'(1x,a)') 'polynomial free energy relationship (FER):'
-      write(*,'(2x,a)') 'pKa   = c0 + c1*kdiss + c2*kdiss² + ... + c_n*kdiss^n'
-      write(*,'(2x,a,a)') 'with kdiss = ΔG(aq)/ln(10)RT ',trim(parinfo)
-      write(*,'(7x,a,f8.2,a)') 'ΔG(aq)=',dG*kcal,' kcal/mol'
+      write(*,'(2x,a)') 'pKa   = c0 + c1*kdiss + c2*kdiss^2 + ... + c_n*kdiss^n'
+      write(*,'(2x,a,a)') 'with kdiss = deltaG(aq)/ln(10)RT ',trim(parinfo)
+      write(*,'(7x,a,f8.2,a)') 'deltaG(aq)=',dG*kcal,' kcal/mol'
       do i=1,nc
         if(c(i)==0.0_wp) cycle
         j=i-1
@@ -328,7 +328,7 @@ subroutine pkaquick(env,tim)
       write(*,'(3x,a,f16.2,a)') '| exptl. pKa     = ',pkaref,' |'
       dum=pka-pkaref
       write(*,'(3x,a)') '|                       ___________ |'
-      write(*,'(3x,a,f16.2,a)') '| ΔpKa           = ',dum,' |'
+      write(*,'(3x,a,f16.2,a)') '| deltapKa           = ',dum,' |'
       endif
       if(rangepka)then
       write(*,'(3x,a)') '|                                   |'
@@ -358,7 +358,7 @@ contains
        logical :: ex
        call env%wrtCHRG('')
        write(jobcall,'(a,1x,a,1x,a,'' --ceasefiles --opt vitght '',a,1x,a,'' >xtb.out'')') &
-       &    trim(env%ProgName),trim(fname),trim(env%gfnver),trim(env%solv),' 2>/dev/null'
+       &    trim(env%ProgName),trim(fname),trim(env%gfnver),trim(env%solv),' 2>nul'
        call execute_command_line(trim(jobcall), exitstat=io)
        inquire(file='xtbopt.xyz',exist=ex)
        if(ex)then

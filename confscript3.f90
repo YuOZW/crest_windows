@@ -80,7 +80,7 @@ subroutine mdopt(env,tim)
       call MDopt_para(env,trim(tmpname),0)
 
 !---- printout and copy
-      call rename('OPTIM'//'/'//'opt.xyz',trim(newname))
+      call rename('OPTIM'//'\\'//'opt.xyz',trim(newname))
       write(*,'(1x,a,1x,a)') 'Optimized ensemble on file','<'//trim(newname)//'>'
 !---- clean up
       call rmrf('OPTIM')
@@ -231,8 +231,8 @@ subroutine screen(env,tim)
         call smallhead('1. crude pre-optimization')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(tmpname),1)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         env%ewin=ewinbackup*4.0d0
         env%rthr=rthrbackup*2.0d0
     !---using cregen to sort the optimized structures
@@ -251,8 +251,8 @@ subroutine screen(env,tim)
         call smallhead('2. optimization with loose thresholds')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),2)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         env%ewin=ewinbackup*2.0d0
         call confg_chk3(env)
         call remaining_in(trim(inpnam),env%ewin,nremain)
@@ -263,8 +263,8 @@ subroutine screen(env,tim)
         call smallhead('3. optimization with very tight thresholds')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),0)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call confg_chk3(env)
         call checkname_xyz(crefile,inpnam,outnam)
         call remaining_in(trim(inpnam),env%ewin,nremain)
@@ -335,10 +335,10 @@ subroutine MTDsample(env,tim)
 
     do i=1,ens%nall
        write(mtddir,'(a,i0)')'MTD',i
-       coordname=trim(mtddir)//'/'//'coord'
+       coordname=trim(mtddir)//'\\'//'coord'
        call wrc0(coordname,ens%nat,ens%at,ens%xyz(1:3,1:ens%nat,i))
        if(env%gfnver=='--gff')then
-          l = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(mtddir)//'/'//'gfnff_topo')
+          l = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(mtddir)//'\\'//'gfnff_topo')
        endif
        call setMDrun2(coordname,hmass,mdtime,mdtemp,mdstep,shake,mddumpxyz, &
       &             mdskip,mddump,-1,env%cts)

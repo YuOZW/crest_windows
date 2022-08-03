@@ -219,7 +219,7 @@ subroutine md(env,better)
       call multilevel_opt(env,6)
 
       call checkname_xyz(crefile,atmp,btmp)
-      write(str,'(''cat MODEF*/xtb_modemin_*.xyz >> '',a)')trim(atmp)
+      write(str,'(''type MODEF*\\xtb_modemin_*.xyz >> '',a)')trim(atmp)
       !call system(trim(str))
       call execute_command_line(trim(str), exitstat=io)
 
@@ -264,7 +264,7 @@ subroutine cross(env,better)
           call confopt(env,'confcross.xyz',tmpconf,.true.)
           call chdir(trim(thispath))
           call checkname_xyz(crefile,inpnam,outnam)
-          call appendto('OPTIM'//'/'//'opt.xyz',trim(inpnam))
+          call appendto('OPTIM'//'\\'//'opt.xyz',trim(inpnam))
           call rmrf('TMPCONF* OPTIM')
 
           call confg_chk(env,0,better)
@@ -341,10 +341,10 @@ subroutine ohess(env)
       if(env%gbsa) then  ! makes charges for qmdff
          jobcall=''
          tmp=trim(env%ProgName)//' coord --scc '
-         write(jobcall,'(a,a,'' --gbsa '',a,'' > tmp 2>/dev/null'')') &
+         write(jobcall,'(a,a,'' --gbsa '',a,'' > tmp 2>nul'')') &
          & trim(tmp),trim(env%gfnver),trim(env%solv)
       else
-         write(jobcall,'(a,'' coord --scc '',a,'' > tmp 2>/dev/null'')') &
+         write(jobcall,'(a,'' coord --scc '',a,'' > tmp 2>nul'')') &
          & trim(env%ProgName),trim(env%gfnver)
       endif
       !call system(trim(jobcall))
@@ -411,7 +411,7 @@ subroutine confg_chk(env,m,better)
       if(m.eq.1)then
          call rmrfw(crefile)
          call checkname_xyz(crefile,atmp,btmp)
-         write(str,'(''cat MODEF*/xtb_modemin_*.xyz >> '',a)')trim(atmp)
+         write(str,'(''type MODEF*\\xtb_modemin_*.xyz >> '',a)')trim(atmp)
          !call system(trim(str))
          call execute_command_line(trim(str), exitstat=io)
          env%cgf(2)=.false. !turn off NEWFILE for confg call

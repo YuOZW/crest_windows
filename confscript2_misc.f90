@@ -30,9 +30,9 @@ subroutine xtbsp(env,xtblevel)
          character(len=80) :: fname,xtbflag
          character(len=512) :: jobcall
          integer :: io
-         character(*),parameter :: pipe=' >xtb.out 2>/dev/null'
+         character(*),parameter :: pipe=' >xtb.out 2>nul'
 !---- some options
-         !pipe=' > xtb.out 2>/dev/null'
+         !pipe=' > xtb.out 2>nul'
          call remove('gfnff_topo')
          call remove('energy')
          if(.not.env%chargesfile)call remove('charges')
@@ -93,7 +93,7 @@ subroutine xtbsp2(fname,env)
          character(len=*) :: fname
          type(systemdata) :: env
          character(len=512) :: jobcall
-         character(*),parameter :: pipe=' > xtbcalc.out 2>/dev/null'
+         character(*),parameter :: pipe=' > xtbcalc.out 2>nul'
          integer :: io
          call remove('gfnff_topo')
          call remove('energy')
@@ -141,7 +141,7 @@ subroutine xtbopt(env)
          write(*,*)
          call smallhead('xTB Geometry Optimization')
 !---- some options
-         pipe=' > xtb.out 2>/dev/null'
+         pipe=' > xtb.out 2>nul'
          call remove('gfnff_topo')
          if(.not.env%chargesfile)call remove('charges')
          call remove('grad')
@@ -336,7 +336,7 @@ subroutine MetaMD_para_OMP(env)
       call getcwd(thispath)
 
       fname='coord'
-      pipe=' > xtb.out 2>/dev/null'
+      pipe=' > xtb.out 2>nul'
 
       write(jobcall,'(a,1x,a,1x,a,1x,''--md'',1x,a,1x,a,a)') &
       &     trim(env%ProgName),trim(fname),trim(env%gfnver),trim(env%solv),pipe
@@ -374,14 +374,15 @@ subroutine MetaMD_para_OMP(env)
              write(*,'(''     dumpstep(trj) /fs  :'',i8)')env%mddumpxyz
              write(*,'(''     dumpstep(Vbias)/ps :'',f8.1)')float(env%mddump)/1000d0
              write(*,'(''     Vbias factor k /Eh :'',f8.4)')env%metadfac(vz)
-             write(*,'(''     Vbias exp α /bohr⁻²:'',f8.2)')env%metadexp(vz)
+             write(*,'(''     Vbias exp alpha /bohr^-2:'',f8.2)')env%metadexp(vz)
        !$omp end critical
          write(tmppath,'(a,i0)')'METADYN',vz
          call execute_command_line('cd '//trim(tmppath)//' && '//trim(jobcall), exitstat=io)
-         inquire(file=trim(tmppath)//'/'//'xtb.trj',exist=ex)
+         inquire(file=trim(tmppath)//'\\'//'xtb.trj',exist=ex)
          if(.not.ex .or. io.ne.0)then
          write(*,'(a,i0,a)')'*Warning: Meta-MTD ',vz,' seemingly failed (no xtb.trj)*'
-         call system('cp -r '//trim(tmppath)//' FAILED-MTD')
+         !call system('cp -r '//trim(tmppath)//' FAILED-MTD')
+         call system('xcopy /D /E /R /Y /K "'//trim(tmppath)//'" FAILED-MTD >nul 2>nul')
          else
          write(*,'(a,i0,a)')'*Meta-MTD ',vz,' finished*'
          endif
@@ -450,9 +451,9 @@ subroutine MDopt_para(env,ensnam,multilev)
          l1=.true.
          verbose=.true.
          if(verbose)then
-           pipe=' 2>/dev/null'
+           pipe=' 2>nul'
          else
-           pipe=' > xtb.out 2>/dev/null'
+           pipe=' > xtb.out 2>nul'
          endif
 
 !---- read the input ensemble
@@ -480,7 +481,7 @@ subroutine MDopt_para(env,ensnam,multilev)
          call copysub('solvent',trim(optpath))
          endif
          if(env%gfnver=='--gff')then
-            l = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(optpath)//'/'//'gfnff_topo')
+            l = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
          endif
 
 
@@ -536,7 +537,7 @@ subroutine MDopt_para(env,ensnam,multilev)
          call copysub('solvent',trim(ctmp))
          endif
          if(env%gfnver=='--gff')then
-            l = sylnk(trim(optpath)//'/'//'gfnff_topo',trim(ctmp)//'/'//'gfnff_topo')
+            l = sylnk(trim(optpath)//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
          endif
       enddo
       write(*,'(1x,a)') 'done.'
@@ -594,8 +595,8 @@ subroutine multilevel_opt(env,modus)
         call smallhead('1. crude pre-optimization')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),modus)
-        filename=trim(thispath)//'/'//trim(outnam) 
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam) 
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
     !---using cregen to sort the optimized structures
         call checkname_xyz(crefile,inpnam,outnam)
         !--- get other thresholds
@@ -619,8 +620,8 @@ subroutine multilevel_opt(env,modus)
         call smallhead('Ensemble optimization with crude thresholds')
         call MDopt_para(env,trim(inpnam),1)
         endif
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         !--- get other thresholds
         newthr=aint(ewinbackup*(10.0d0/6.0d0))
         env%ewin=newthr   !
@@ -632,8 +633,8 @@ subroutine multilevel_opt(env,modus)
         call smallhead('3. optimization with very tight thresholds')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),0) !optlev is set from the module variable
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call sort_and_check(env,trim(filename))
         call rmoptim()
         write(*,*)
@@ -642,8 +643,8 @@ subroutine multilevel_opt(env,modus)
         call smallhead('1. crude pre-optimization')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),1)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
     !---using cregen to sort the optimized structures
         call checkname_xyz(crefile,inpnam,outnam)
         !--- get other thresholds
@@ -666,8 +667,8 @@ subroutine multilevel_opt(env,modus)
         endif
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),4) !optlev is set from the module variable
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call sort_and_check(env,trim(filename))
         call rmoptim()
         write(*,*)
@@ -679,8 +680,8 @@ subroutine multilevel_opt(env,modus)
         !call smallhead('Ensemble optimization')
         call checkname_xyz(crefile,inpnam,outnam)
         call MDopt_para(env,trim(inpnam),0) !optlev is set from the module variable
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
 !        if (env%crestver .ne. crest_solv) then
         if(.not. env%QCG) then
             call sort_and_check(env,trim(filename))
@@ -902,13 +903,13 @@ subroutine cross2(env)
             else
                call MDopt_para(env,inpnam,0) !<--- creates another dir OPTIM within the current dir OPTIM
             endif
-            call rename('OPTIM'//'/'//'opt.xyz','opt.xyz') !move the optimized GC ensemble into current direcotry
+            call rename('OPTIM'//'\\'//'opt.xyz','opt.xyz') !move the optimized GC ensemble into current direcotry
           endif
 
           !--- exit dir OPTIM and get file
           call chdir(trim(thispath))  
           call checkname_xyz(crefile,inpnam,outnam)
-          call appendto('OPTIM'//'/'//'opt.xyz',trim(inpnam))
+          call appendto('OPTIM'//'\\'//'opt.xyz',trim(inpnam))
           call rmrfw('TMPCONF')
           call rmrf('OPTIM')
           call rmrf('zmat*.zmat')
@@ -972,7 +973,7 @@ subroutine collect_trj(base,whichfile)
         if(.not.ex)then
           exit
         else
-          write(str,'(a,a,''xtb.trj'')')trim(dir),'/'
+          write(str,'(a,a,''xtb.trj'')')trim(dir),'\\'
           call appendto(trim(str),whichfile)
           i=i+1
         endif
@@ -997,7 +998,7 @@ subroutine collect_trj_skipfirst(base,whichfile)
         if(.not.ex)then
           exit
         else
-          write(str,'(a,a,''xtb.trj'')')trim(dir),'/'
+          write(str,'(a,a,''xtb.trj'')')trim(dir),'\\'
           call TRJappendto_skipfirst(trim(str),whichfile)
           i=i+1
         endif
@@ -1212,7 +1213,8 @@ subroutine catchdiatomic(env)
     close(ich)
     !create the system call (it is the same for every optimization)
     write(jobcall,'(a,1x,a,1x,a,'' --opt '',a,1x,a,'' --ceasefiles  >xtb.out'')') &
-   &    trim(env%ProgName),conformerfile,trim(env%gfnver),trim(env%solv),' 2>/dev/null'
+   &    trim(env%ProgName),conformerfile,trim(env%gfnver),trim(env%solv),' 2>nul'
+    write(*,*) jobcall
     call execute_command_line(trim(jobcall), exitstat=ich)
     call copy('xtbopt.xyz',conformerfile)
     call copy(conformerfile,'crest_rotamers.xyz')
@@ -1440,7 +1442,7 @@ subroutine XHorient(env,infile)
         call smallhead('Additional orientation sampling')
         call MDopt_para(env,newfile,0)
       !---- printout and copy
-        call rename('OPTIM'//'/'//'opt.xyz',trim(newfile))
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(newfile))
         call rmrf('OPTIM')
       else
         call remove(newfile)  

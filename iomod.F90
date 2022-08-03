@@ -1,4 +1,4 @@
-!================================================================================!
+﻿!================================================================================!
 ! This file is part of crest.
 !
 ! Copyright (C) 2018-2020 Philipp Pracht
@@ -17,99 +17,96 @@
 ! along with crest.  If not, see <https://www.gnu.org/licenses/>.
 !================================================================================!
 module iomod
-      use iso_fortran_env, only : wp => real64
-      use iso_c_binding
-      implicit none
-      integer :: ich,och
-      logical :: ex
+    use iso_fortran_env, only : wp => real64
+    use iso_c_binding
+    implicit none
+    integer :: ich,och
+    logical :: ex
 
-      private :: wp
-      private :: ich,och
-      private :: ex
+    private :: wp
+    private :: ich,och
+    private :: ex
 
-      interface
+    interface
         function mkdir(path,mode) bind(c,name="mkdir")
-          use iso_c_binding
-          integer(c_int) :: mkdir
-          character(kind=c_char,len=1) :: path(*)
-          integer(c_int16_t), value :: mode
+            use iso_c_binding
+            integer(c_int) :: mkdir
+            character(kind=c_char,len=1) :: path(*)
+            integer(c_int16_t), value :: mode
         end function mkdir
-      end interface
+    end interface
 
+    interface setenv
+    module procedure setenv_string
+    module procedure setenv_int
+    module procedure setenv_float
+    end interface setenv
 
-      interface
-         integer(kind=c_int) function c_setenv(c_name,c_VALUE) bind(c,name="setenv")
-         use iso_c_binding
-         character(kind=c_char)   :: c_name(*)
-         character(kind=c_char)   :: c_VALUE(*)
-         end function
-      end interface
-      interface setenv
-      module procedure setenv_string
-      module procedure setenv_int
-      module procedure setenv_float
-      end interface setenv
- 
-      interface
-         integer(kind=c_int) function c_symlink(c_from,c_to) bind(c,name="symlink")
-         use iso_c_binding
-         character(kind=c_char)   :: c_from(*)
-         character(kind=c_char)   :: c_to(*)
-         end function
-      end interface
+    interface wrshort
+    module procedure wrshort_real
+    module procedure wrshort_int
+    module procedure wrshort_string
+    end interface wrshort
 
-       interface wrshort
-       module procedure wrshort_real
-       module procedure wrshort_int
-       module procedure wrshort_string
-       end interface wrshort
+    interface rdshort
+    module procedure rdshort_real
+    module procedure rdshort_int
+    module procedure rdshort_string
+    end interface rdshort
 
-       interface rdshort
-       module procedure rdshort_real
-       module procedure rdshort_int
-       module procedure rdshort_string
-       end interface rdshort
+contains
 
+integer function win_setenv(name,VALUE)
+    character(*) :: name
+    character(*) :: VALUE
+!    call execute_command_line('set '//name//'='//VALUE//' & set', exitstat=win_setenv)
+    win_setenv=0
+end function win_setenv
 
-      contains
+integer function win_symlink(old,new)
+    character(*) :: old
+    character(*) :: new
+    call execute_command_line('symlink.bat "'//old//'" "'//new//'" >nul 2>nul', exitstat=win_symlink)
+end function win_symlink
+
 !-------------------------------------------------------------
 ! remove file 'fname'
 ! if 'fname' contains the wildcard '*', the remove is ignored
 !--------------------------------------------------------------
 subroutine remove(fname)
-      implicit none
-      character(len=*) :: fname
-      if(index(fname,'*').eq.0)then
-       open(newunit=ich,file=fname)
-       close(ich,status='delete')
-      endif
+    implicit none
+    character(len=*) :: fname
+    if(index(fname,'*').eq.0)then
+        open(newunit=ich,file=fname)
+        close(ich,status='delete')
+    endif
 end subroutine remove
 
 !-------------------------------------------------------------
 ! creates an empty file "fname", similar to the shell command "touch"
 !--------------------------------------------------------------
 subroutine touch(fname)
-      implicit none
-      character(len=*) :: fname
-      open(newunit=ich,file=fname)
-      close(ich)
+    implicit none
+    character(len=*) :: fname
+    open(newunit=ich,file=fname)
+    close(ich)
 end subroutine touch
 
 !-------------------------------------------------------------
 ! prints the file "fname", similar to the shell command "cat"
 !--------------------------------------------------------------
 subroutine cat(fname)
-      implicit none
-      character(len=*) :: fname
-      character(len=512) :: str
-      integer :: io
-      open(newunit=ich,file=fname)
-       do
+    implicit none
+    character(len=*) :: fname
+    character(len=512) :: str
+    integer :: io
+    open(newunit=ich,file=fname)
+    do
         read(ich,'(a)',iostat=io)str
         if (io < 0) exit
         write(*,'(a)')trim(str)
-       enddo
-      close(ich)
+    enddo
+    close(ich)
 end subroutine cat
 
 !--------------------------------------------------------------------------------------
@@ -272,32 +269,32 @@ end subroutine appendto
 ! put a environment variable via iso_c_binding
 !-------------------------------------------------------------------------
  function setenv_string(env,str)
-      implicit none
-      integer :: setenv_string
-      character(len=*) :: env
-      character(len=*) :: str
-      setenv_string = c_setenv(env//c_null_char,str//c_null_char) !create new directory
-      return
+    implicit none
+    integer :: setenv_string
+    character(len=*) :: env
+    character(len=*) :: str
+    setenv_string = win_setenv(env,str) !create new directory
+    return
  end function setenv_string
  function setenv_int(env,intval)
-      implicit none
-      integer :: setenv_int
-      character(len=*) :: env
-      integer :: intval
-      character(len=20) :: str
-      write(str,'(i0)')intval
-      setenv_int = c_setenv(env//c_null_char,trim(str)//c_null_char) !create new directory
-      return
+    implicit none
+    integer :: setenv_int
+    character(len=*) :: env
+    integer :: intval
+    character(len=20) :: str
+    write(str,'(i0)')intval
+    setenv_int = win_setenv(env,trim(str)) !create new directory
+    return
  end function setenv_int
  function setenv_float(env,floatval)
-      implicit none
-      integer :: setenv_float
-      character(len=*) :: env
-      real(wp) :: floatval
-      character(len=30) :: str
-      write(str,'(f14.6)')floatval
-      setenv_float = c_setenv(env//c_null_char,trim(str)//c_null_char) !create new directory
-      return
+    implicit none
+    integer :: setenv_float
+    character(len=*) :: env
+    real(wp) :: floatval
+    character(len=30) :: str
+    write(str,'(f14.6)')floatval
+    setenv_float = win_setenv(env,trim(str)) !create new directory
+    return
  end function setenv_float
 
 !-------------------------------------------------------------------------
@@ -308,7 +305,7 @@ end subroutine appendto
       integer :: sylnk
       character(len=*) :: path1
       character(len=*) :: path2
-      sylnk = c_symlink(trim(path1)//c_null_char,trim(path2)//c_null_char) !create new directory
+      sylnk = win_symlink(trim(path1),trim(path2)) !create new directory
       return
  end function sylnk
 
@@ -664,7 +661,7 @@ function directory_exist(file) result(exist)
 #else
     ! GCC handles directories as files, to make sure we get a directory and
     ! not a file append a path separator and the current dir
-    inquire(file=trim(file)//"/.", exist=exist)
+    inquire(file=trim(file)//"\\.", exist=exist)
 #endif
 end function directory_exist
 

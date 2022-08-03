@@ -756,7 +756,7 @@ subroutine wrtCHRG(self,dir)
     k = len_trim(dir)
     if(self%chrg.ne.0)then
        if(k>0)then 
-       path=trim(dir)//'/'//'.CHRG'
+       path=trim(dir)//'\\'//'.CHRG'
        else
        path='.CHRG'
        endif    
@@ -766,7 +766,7 @@ subroutine wrtCHRG(self,dir)
     endif    
     if(self%UHF.ne.0)then
        if(k>0)then
-       path=trim(dir)//'/'//'.UHF'
+       path=trim(dir)//'\\'//'.UHF'
        else
        path='.UHF'
        endif    
@@ -776,7 +776,7 @@ subroutine wrtCHRG(self,dir)
     endif  
     if(self%chargesfile .and. allocated(self%ref%charges))then
        if(k>0)then 
-       path=trim(dir)//'/'//'charges'
+       path=trim(dir)//'\\'//'charges'
        else
        path='charges'
        endif

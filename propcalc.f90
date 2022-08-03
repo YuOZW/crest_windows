@@ -101,7 +101,7 @@ subroutine propcalc(iname,imode,env,tim)
 
 !--- some settings
       solv=''
-      pipe='2>/dev/null'
+      pipe='2>nul'
       xname='struc.xyz'
       call getcwd(thispath)
       update=.true.
@@ -200,7 +200,7 @@ subroutine propcalc(iname,imode,env,tim)
          call copysub('solvent',trim(optpath))
          endif
          if(env%gfnver=='--gff')then
-            r = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(optpath)//'/'//'gfnff_topo')
+            r = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
          endif
 
 
@@ -238,7 +238,7 @@ subroutine propcalc(iname,imode,env,tim)
          call copysub('solvent',trim(ctmp))
          endif
          if(env%gfnver=='--gff')then
-            r = sylnk(trim(optpath)//'/'//'gfnff_topo',trim(ctmp)//'/'//'gfnff_topo')
+            r = sylnk(trim(optpath)//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
          endif
 
          ii=ii+1
@@ -332,7 +332,7 @@ subroutine propcalc(iname,imode,env,tim)
          call rdpropens(TMPCONF,nat,xyz) !get updated geometries
          open(newunit=ich,file='crest_property.xyz')
          do i=1,TMPCONF
-            write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+            write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
             call grepval(tmppath,'TOTAL FREE ENERGY',ex,eread(i))
             if(.not.env%trackorigin)then
               write(str,'(3x,f16.10)')eread(i)
@@ -350,7 +350,7 @@ subroutine propcalc(iname,imode,env,tim)
             call newcregen(env,0)
           endif
           call rename('crest_property.xyz.sorted', &
-          & trim(thispath)//'/crest_property.xyz')
+          & trim(thispath)//'\\crest_property.xyz')
           call remove(env%ensemblename)
 !------ IR averaging
        case( 2 )
@@ -372,13 +372,13 @@ subroutine propcalc(iname,imode,env,tim)
              call newcregen(env,0)
          endif
          call rename('crest_ensemble.xyz', &
-         & trim(thispath)//'/crest_conformers.xyz')
+         & trim(thispath)//'\\crest_conformers.xyz')
        case( 50:59 )
          call rdpropens(TMPCONF,nat,xyz) !get updated geometries
          env%ensemblename='crest_reopt.xyz'
          open(newunit=ich,file=env%ensemblename)
          do i=1,TMPCONF
-            write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+            write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
             call grepval(tmppath,'total energy',ex,eread(i))
             if(.not.env%trackorigin)then
               write(str,'(3x,f16.10)')eread(i)
@@ -389,7 +389,7 @@ subroutine propcalc(iname,imode,env,tim)
          enddo
          close(ich)
          call rename(env%ensemblename, &
-         & trim(thispath)//'/'//env%ensemblename)
+         & trim(thispath)//'\\'//env%ensemblename)
          call chdir(thispath)
          if(imode .lt. 59)then !TODO temporary skip for some testing
          env%confgo=.true.
@@ -405,7 +405,7 @@ subroutine propcalc(iname,imode,env,tim)
        case( 999 ) !singlpoint reranking 
           open(newunit=ich,file='crest_property.xyz')
           do i=1,TMPCONF
-            write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+            write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
             call grepval(tmppath,'| TOTAL ENERGY',ex,eread(i))
             write(str,'(3x,f16.10)')eread(i)
             call wrxyz(ich,nat,at,xyz(:,:,i),trim(str))
@@ -419,10 +419,10 @@ subroutine propcalc(iname,imode,env,tim)
             call newcregen(env,0)
           endif
           call rename('crest_property.xyz.sorted', &
-          & trim(thispath)//'/crest_property.xyz')
+          & trim(thispath)//'\\crest_property.xyz')
           call remove(env%ensemblename)
           call rename('crest_ensemble.xyz', &
-          & trim(thispath)//'/crest_ensemble.xyz')
+          & trim(thispath)//'\\crest_ensemble.xyz')
        case default
          continue
       end select
@@ -435,19 +435,19 @@ subroutine propcalc(iname,imode,env,tim)
       inquire(file='crest.vibspectrum',exist=ex)
       if(ex)then
        call rename('crest.vibspectrum', &
-       & trim(thispath)//'/'//'crest.vibspectrum')
+       & trim(thispath)//'\\'//'crest.vibspectrum')
       endif
 
       inquire(file='crest_property.xyz',exist=ex)
       if(ex)then
        call rename('crest_property.xyz', &
-       & trim(thispath)//'/'//'crest_property.xyz')
+       & trim(thispath)//'\\'//'crest_property.xyz')
       endif
 
       inquire(file='crest_populated.xyz',exist=ex)
       if(ex)then
        call rename('crest_populated.xyz', &
-       & trim(thispath)//'/'//'crest_populated.xyz')
+       & trim(thispath)//'\\'//'crest_populated.xyz')
       endif
 
       call tim%stop(10)
@@ -563,7 +563,7 @@ subroutine etotprop(TMPCONF,pop,pr)
       write(*,'(1x,a)')"Calculating populations from total energies ..."
       allocate(eread(TMPCONF))
       do i=1,TMPCONF
-         write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+         write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
         call grepval(tmppath,'total energy',ex,eread(i))
       enddo
 
@@ -573,7 +573,7 @@ subroutine etotprop(TMPCONF,pop,pr)
       write(*,'(a)')'========================================================='
       write(*,'(a)')'============= total energies & populations  ============='
       write(*,'(a)')'========================================================='
-      write(*,'('' structure    ΔE(kcal/mol)    Etot(Eh)        weight'')')
+      write(*,'('' structure    deltaE(kcal/mol)    Etot(Eh)        weight'')')
       do i=1,TMPCONF
       dE=(eread(i)-eread(1))*kcal
       write(*,'(i5,6x,F10.2,4x,F14.6,F13.4)') i,dE,eread(i),pop(i)
@@ -606,10 +606,10 @@ subroutine rdpropens(TMPCONF,n,xyz)
       real(wp),parameter :: kcal =627.5095_wp
 
       do i=1,TMPCONF
-        write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtbopt.xyz'
+        write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtbopt.xyz'
         inquire(file=tmppath,exist=ex)
         if(.not.ex)then
-          write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','struc.xyz'
+          write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','struc.xyz'
         endif
         open(newunit=ich,file=tmppath)
         read(ich,'(a)')atmp
@@ -641,7 +641,7 @@ subroutine wrpropens(TMPCONF,n,xyz,at,eread)
 
       open(newunit=ich,file='crest_property.xyz')
       do i=1,TMPCONF
-        write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+        write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
         call grepval(tmppath,'total energy',ex,eread(i))
         call wrxyz(ich,n,at,xyz(:,:,i),eread(i))
       enddo
@@ -743,7 +743,7 @@ subroutine autoir(TMPCONF,imode,env)
           write(*,'(1x,a)')"Calculating populations from free energies ..."
           allocate(eread(TMPCONF),pop(TMPCONF))
           do i=1,TMPCONF
-             write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+             write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
              call grepval(tmppath,'TOTAL FREE ENERGY',ex,eread(i))
           enddo
        case default
@@ -751,7 +751,7 @@ subroutine autoir(TMPCONF,imode,env)
           write(*,'(1x,a)')"Calculating populations from total energies ..."
           allocate(eread(TMPCONF),pop(TMPCONF))
           do i=1,TMPCONF
-             write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','xtb.out'
+             write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','xtb.out'
              call grepval(tmppath,'total energy',ex,eread(i))
           enddo
        end select
@@ -773,12 +773,12 @@ subroutine autoir(TMPCONF,imode,env)
            write(*,'(a)')'========================================================='
            write(*,'(a)')'============= free energies & populations  =============='
            write(*,'(a)')'========================================================='
-           write(*,'('' structure    ΔG(kcal/mol)    Gtot(Eh)        weight'')')
+           write(*,'('' structure    deltaG(kcal/mol)    Gtot(Eh)        weight'')')
          case default
            write(*,'(a)')'========================================================='
            write(*,'(a)')'============= total energies & populations  ============='
            write(*,'(a)')'========================================================='
-           write(*,'('' structure    ΔE(kcal/mol)    Etot(Eh)        weight'')')
+           write(*,'('' structure    deltaE(kcal/mol)    Etot(Eh)        weight'')')
         end select
         do i=1,nall
         dE=(eread(i)-eread(1))*kcal
@@ -805,7 +805,7 @@ subroutine autoir(TMPCONF,imode,env)
       do i=1,TMPCONF
          if(pop(i).ge.pthr .or. i.eq.maxl)then
          write(ich5,'(1x,i0,1x,f6.4)')i,pop(i)
-         write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'/','vibspectrum'
+         write(tmppath,'(a,i0,a,a)')'TMPCONF',i,'\\','vibspectrum'
          call rdvibs(tmppath,nmodes,vibspec(1,:,npop),vibspec(2,:,npop))
          pop2(npop)=pop(i)
          npop=npop+1

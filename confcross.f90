@@ -320,7 +320,7 @@ subroutine confcross(env,maxgen,kk)
       call copysub('solvent','OPTIM')
       endif
       if(env%gfnver=='--gff')then
-         io = sylnk(trim(thispath)//'/'//'gfnff_topo','OPTIM'//'/'//'gfnff_topo')
+         io = sylnk(trim(thispath)//'\\'//'gfnff_topo','OPTIM'//'\\'//'gfnff_topo')
       endif
 
 
@@ -361,7 +361,7 @@ subroutine confcross(env,maxgen,kk)
          call copysub('solvent',trim(ctmp))
          endif
          if(env%gfnver=='--gff')then
-           io = sylnk(trim(thispath)//'/'//'OPTIM'//'/'//'gfnff_topo',trim(ctmp)//'/'//'gfnff_topo')
+           io = sylnk(trim(thispath)//'\\'//'OPTIM'//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
          endif
 
       enddo

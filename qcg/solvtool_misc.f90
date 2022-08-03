@@ -28,7 +28,7 @@ subroutine xtbsp3(env,fname)
          character(len=*) :: fname
          type(systemdata) :: env
          character(len=512) :: jobcall
-         character(*),parameter :: pipe=' > xtb.out 2> /dev/null'
+         character(*),parameter :: pipe=' > xtb.out 2>nul'
          integer :: io
          call remove('gfnff_topo')
          call remove('energy')
@@ -67,7 +67,7 @@ subroutine xtb_lmo(env,fname)!,chrg)
          character(len=80)               :: pipe
          character(len=512)              :: jobcall
 
-         pipe=' > xtb.out 2>/dev/null'
+         pipe=' > xtb.out 2>nul'
 
 !---- setting threads
          if(env%autothreads)then
@@ -111,7 +111,7 @@ subroutine xtb_iff(env,file_lmo1,file_lmo2,solu,clus)
          character(len=*)                :: file_lmo1, file_lmo2
 
 !--- Option setting        
-          pipe=' > iff.out 2>/dev/null'
+          pipe=' > iff.out 2>nul'
 
 
 !--- Setting threads
@@ -165,7 +165,7 @@ subroutine opt_cluster(env,solu,clus,fname)
          call remove('xtb.out')
 
 !         pipe=' 2>/dev/null'
-         pipe=' 2>/dev/null'
+         pipe=' 2>nul'
 
 !---- writing wall pot in xcontrol
          call write_wall(env,solu%nat,solu%ell_abc,clus%ell_abc,'xcontrol')
@@ -231,11 +231,11 @@ subroutine ensemble_lmo(env,fname,self,NTMP,TMPdir,conv)
     call ompautoset(env%threads,7,env%omp,env%MAXRUN,NTMP)
   endif
 
-  pipe='2>/dev/null'
+  pipe='2>nul'
 
   !create the system call (it is the same for every optimization)
 
-  write(jobcall,'(a,1x,a,1x,a,'' --sp --lmo --chrg '',i3,1x,a,'' >xtb_lmo.out'')') &
+  write(jobcall,'(a,1x,a,1x,a,'' --sp --lmo --chrg '',i3,1x,a,'' > xtb_lmo.out'')') &
   &     trim(env%ProgName),trim(fname),trim(env%lmover),self%chrg,trim(pipe)
   k=0 !counting the finished jobs
 
@@ -305,7 +305,7 @@ subroutine ensemble_iff(env,outer_ell_abc,nfrag1,frag1_file,frag2_file,NTMP,TMPd
   real(wp)                        :: percent
 
 ! some options
-pipe='2>/dev/null'
+pipe='2>nul'
 frag1='solvent_cluster.lmo'
 frag2='solvent.lmo'
 
@@ -325,7 +325,7 @@ frag2='solvent.lmo'
          vz=i
       !$omp task firstprivate( vz ) private( tmppath,jobcall )
 ! create the system call 
-        write(jobcall,'(a,1x,a,1x,a,'' -nfrag1 '',i3,'' -ellips '',3f9.3,'' -qcg '',a,'' >iff.out'')') &
+        write(jobcall,'(a,1x,a,1x,a,'' -nfrag1 '',i3,'' -ellips '',3f9.3,'' -qcg '',a,'' > iff.out'')') &
   &         trim(env%ProgIFF),trim(frag1_file),trim(frag2_file),nfrag1,outer_ell_abc(conv(vz),1:3)*0.9,trim(pipe)
          write(tmppath,'(a,i0)')trim(TMPdir),conv(vz)
          call execute_command_line('cd '//trim(tmppath)//' && '//trim(jobcall))
@@ -393,7 +393,7 @@ subroutine cff_opt(postopt,env,fname,n12,NTMP,TMPdir,conv,nothing_added)
        conv(env%nqcgclust+1) = k
     end do
   end if
-  pipe='2>/dev/null'
+  pipe='2>nul'
 
   call getcwd(thispath)
   do i=1,NTMP
@@ -411,7 +411,7 @@ subroutine cff_opt(postopt,env,fname,n12,NTMP,TMPdir,conv,nothing_added)
   end do   
 
 !--- Jobcall  
-    write(jobcall,'(a,1x,a,1x,a,'' --input xcontrol --opt '',i0,1x,a,'' >xtb.out'')') &
+    write(jobcall,'(a,1x,a,1x,a,'' --input xcontrol --opt '',i0,1x,a,'' > xtb.out'')') &
     &    trim(env%ProgName),trim(fname),trim(env%gfnver),nint(env%optlev),trim(pipe)
 
   if(NTMP.lt.1)then
@@ -455,7 +455,7 @@ subroutine cff_opt(postopt,env,fname,n12,NTMP,TMPdir,conv,nothing_added)
   end do   
 
   !create the system call for sp (needed for gbsa model)
-  write(jobcall,'(a,1x,a,1x,a,'' --sp '',a,1x,a,'' >xtb_sp.out'')') &
+  write(jobcall,'(a,1x,a,1x,a,'' --sp '',a,1x,a,'' > xtb_sp.out'')') &
   &    trim(env%ProgName),'xtbopt.coord',trim(env%gfnver),trim(env%solv),trim(pipe)
  
   if(NTMP.lt.1)then
@@ -539,7 +539,7 @@ subroutine ens_sp(env,fname,NTMP,TMPdir)
     write(*,'(2x,''Single point computation with GBSA model'')')
     write(*,'(2x,i0,'' jobs to do.'')') NTMP
 
-  pipe='2>/dev/null'
+  pipe='2>nul'
 
   call getcwd(thispath)
 
@@ -623,7 +623,7 @@ subroutine ens_freq(env,fname,NTMP,TMPdir)
     write(*,'(2x,''Starting reoptimizations + Frequency computation of ensemble'')')
     write(*,'(2x,i0,'' jobs to do.'')') NTMP
 
-  pipe='2>/dev/null'
+  pipe='2>nul'
 
   call getcwd(thispath)
 
@@ -641,7 +641,7 @@ subroutine ens_freq(env,fname,NTMP,TMPdir)
 !    &    trim(env%ProgName),trim(fname),trim(env%gfnver),trim(env%solv),trim(pipe)
 
 !--- Jobcall  
-    write(jobcall,'(a,1x,a,1x,a,'' --ohess '',a,'' >xtb_freq.out'')') &
+    write(jobcall,'(a,1x,a,1x,a,'' --ohess '',a,'' > xtb_freq.out'')') &
     &    trim(env%ProgName),trim(fname),trim(env%gfnver),trim(pipe)
 
 

@@ -296,7 +296,7 @@ subroutine thermo_wrap(env,pr,nat,at,xyz,dirname, &
     logical :: subdir,ex
     integer :: i,io,r,ich
     character(len=1024) :: jobcall
-    character(len=*),parameter :: pipe ='2>/dev/null'
+    character(len=*),parameter :: pipe ='2>nul'
     character(len=*),parameter :: xname='freq.xyz'
     character(len=:),allocatable :: optpath
     character(len=:),allocatable :: jobcall2
@@ -337,7 +337,7 @@ subroutine thermo_wrap(env,pr,nat,at,xyz,dirname, &
     if(subdir)then
          call rmrf(trim(dirname))
          r = makedir(trim(dirname))
-         optpath=trim(dirname)//'/'
+         optpath=trim(dirname)//'\\'
     endif     
 
     !if(env%chrg.ne.0)then
@@ -354,9 +354,9 @@ subroutine thermo_wrap(env,pr,nat,at,xyz,dirname, &
     inquire(file='gfnff_topo',exist=ex)
     if(env%gfnver=='--gff' .and. subdir .and.ex)then
         call getcwd(thispath)
-        io = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(optpath)//'gfnff_topo')
+        io = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'gfnff_topo')
     endif
-    io = sylnk(trim(thispath)//'/'//env%fixfile,trim(optpath)//env%fixfile)
+    io = sylnk(trim(thispath)//'\\'//env%fixfile,trim(optpath)//env%fixfile)
 
 !$omp critical
     open(unit=ich,file=trim(optpath)//xname)
@@ -587,9 +587,9 @@ subroutine calcSrrhoav(env,ensname)
     call chdir('HESSIANS')
     if(env%gfnver=='--gff' .and.ex)then
     call getcwd(tmppath)
-    io = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
+    io = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(tmppath)//'\\'//'gfnff_topo')
     endif
-    io = sylnk(trim(thispath)//'/'//env%fixfile,trim(tmppath)//'/'//env%fixfile)
+    io = sylnk(trim(thispath)//'\\'//env%fixfile,trim(tmppath)//'\\'//env%fixfile)
 
     k=0
     niceprint=env%niceprint
@@ -712,7 +712,7 @@ subroutine calcSrrhoav(env,ensname)
     if(env%thermo%printpop)then
     popf = makedir('populations')    
     do j=1,nt
-    write(tmppath,'(a,a,a,i0)')'populations','/','.pop_',nint(temps(j))
+    write(tmppath,'(a,a,a,i0)')'populations','\\','.pop_',nint(temps(j))
     open(newunit=popf,file=trim(tmppath))    
       do k=1,nall
       write(popf,'(f16.8)') p(k,j)
@@ -737,7 +737,7 @@ subroutine calcSrrhoav(env,ensname)
          write(*,'(a9)')'done.'
      endif
 !--- average S_rrho with CORRECT populations
-     write(ou,'(1x,a)',advance='no') 'calculating δSrrho ... '
+     write(ou,'(1x,a)',advance='no') 'calculating deltaSrrho ... '
      flush(ou)
      srrho=0.0d0
      do j=1,nt
@@ -787,7 +787,7 @@ subroutine calcSrrhoav(env,ensname)
      if((nt>1))then
        write(*,'(a)')
        write(*,'(a10)',advance='no') "T/K"
-       write(*,'(a16)',advance='no') "δS/cal/molK"
+       write(*,'(a16)',advance='no') "deltaS/cal/molK"
        write(*,'(a16)',advance='no') "|G(T)|/Eh"
        write(*,'(a16)',advance='no') "G_lowest/Eh"
        write(*,'(a8)',advance='no') "(conf)"
@@ -825,7 +825,7 @@ subroutine calcSrrhoav(env,ensname)
        write(*,*)
        write(*,'(1x,a)') 'Quantities calculated on free energies:'
        write(*,'(a10)',advance='no') "T/K"
-       write(*,'(a16)',advance='no') "δSrrho"
+       write(*,'(a16)',advance='no') "deltaSrrho"
        write(*,'(a16)',advance='no') "Cp(T)"
        write(*,'(a16)',advance='no') "[H(T)-H(0)]"
        write(*,'(a)')

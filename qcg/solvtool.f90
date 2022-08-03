@@ -165,7 +165,7 @@ subroutine qcg_setup(env,solu,solv)
 
   call getcwd(thispath)
 
-  inquire(file='./qcg_tmp/solute_properties/solute',exist=tmp) 
+  inquire(file='.\\qcg_tmp\\solute_properties\\solute',exist=tmp) 
   if (tmp) call rmrf('qcg_tmp') !User given scratch dir will be removed anyway after run
 
   if(env%scratchdir .eq. '') then !check if scratch was not set
@@ -954,7 +954,7 @@ subroutine qcg_ensemble(env,solu,solv,clus,ens,tim,fname_results)
       newmetadlist = 10.0_wp
 
       fname='coord'
-      pipe=' > xtb.out 2>/dev/null'
+      pipe=' > xtb.out 2>nul'
 
 
     !--- Writing constraining file xcontrol
@@ -1023,7 +1023,7 @@ subroutine qcg_ensemble(env,solu,solv,clus,ens,tim,fname_results)
 
        call execute_command_line('cd '//trim(tmppath)//' && '//trim(jobcall), exitstat=io)
 
-       inquire(file=trim(tmppath)//'/'//'xtb.trj',exist=ex)
+       inquire(file=trim(tmppath)//'\\'//'xtb.trj',exist=ex)
        if(.not.ex .or. io.ne.0)then
           write(*,'(a,i0,a)')'*Warning: MD seemingly failed (no xtb.trj)*'
        else 
@@ -1059,7 +1059,7 @@ subroutine qcg_ensemble(env,solu,solv,clus,ens,tim,fname_results)
 
        call execute_command_line('cd '//trim(tmppath)//' && '//trim(jobcall), exitstat=io)
 
-       inquire(file=trim(tmppath)//'/'//'xtb.trj',exist=ex)
+       inquire(file=trim(tmppath)//'\\'//'xtb.trj',exist=ex)
        if(.not.ex .or. io.ne.0)then
           write(*,'(a,i0,a)')'*Warning: Meta-MTD seemingly failed (no xtb.trj)*'
        else
@@ -2165,7 +2165,7 @@ subroutine qcg_eval(env,solu,solu_ens,solv_ens)
   call pr_eval_3(srange,freqscal,env%freq_scal,Gsolv)
 
 ! Save Result
-  open(newunit=ich23,file='frequencies/result.dat')
+  open(newunit=ich23,file='frequencies\\result.dat')
   write(ich23,'("Solvation Free Energy [kcal/mol] :")')
   write(ich23,'(f8.2)') Gsolv(freqscal)
   close(ich23)
@@ -2968,11 +2968,11 @@ subroutine qcg_restart(env,progress,solu,solv,clus,solu_ens,solv_ens,clus_backup
   freq = .false.
   tmp = .false.
 
-  inquire(file='./grow/cluster.coord',exist=grow) 
-  inquire(file='./ensemble/final_ensemble.xyz',exist=solu_ensemble)
-  inquire(file='./solvent_ensemble/final_ensemble.xyz',exist=solv_ensemble) 
-  inquire(file='./solvent_ensemble/crest_ensemble.xyz',exist=solv_cff) 
-  inquire(file='./frequencies/result.dat',exist=freq) 
+  inquire(file='.\\grow\\cluster.coord',exist=grow) 
+  inquire(file='.\\ensemble\\final_ensemble.xyz',exist=solu_ensemble)
+  inquire(file='.\\solvent_ensemble\\final_ensemble.xyz',exist=solv_ensemble) 
+  inquire(file='.\\solvent_ensemble\\crest_ensemble.xyz',exist=solv_cff) 
+  inquire(file='.\\frequencies\\result.dat',exist=freq) 
 
   if(solv_cff .or. solv_ensemble) solv_present = .true.
 
@@ -3120,7 +3120,7 @@ subroutine qcg_cleanup(env)
 
   call getcwd(thispath)
   call chdir(env%scratchdir)
-  inquire(file='./solute_properties/solute', exist=tmp)
+  inquire(file='.\\solute_properties\\solute', exist=tmp)
   if(tmp) then
     call rmrf('solute_properties')
     call rmrf('solvent_properties')
@@ -3139,7 +3139,7 @@ subroutine check_prog_path_iff(env)
   integer                      :: ios,io
 
   prog=env%ProgIFF
-  write(str,'("which ",a," > ",a,"_path 2>/dev/null")') trim(prog),trim(prog)
+  write(str,'("which ",a," > ",a,"_path 2>nul")') trim(prog),trim(prog)
   call execute_command_line(trim(str), exitstat=io)
   write(str,'(a,"_path")') trim(prog)
   str=trim(str)

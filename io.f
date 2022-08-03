@@ -311,9 +311,9 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       character(len=512) :: fname2
       logical :: ex,ex2
       !use a global .anmrrc if present
-      inquire(file='~/.anmrrc',exist=ex)
+      inquire(file='~\\.anmrrc',exist=ex)
       if(ex)then
-        atmp='~/.anmrrc'
+        atmp='~\\.anmrrc'
         return
       else
       !if not present try to use a custom .anmrrc

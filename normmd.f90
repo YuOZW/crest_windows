@@ -47,7 +47,7 @@ subroutine normalMD(fname,env,nr,newtemp,newtime)
          call rmrf(tmppath)            !clear old directory
          r = makedir(trim(tmppath))    !make new directory
 
-         call rename(trim(fname),trim(tmppath)//'/'//'coord')
+         call rename(trim(fname),trim(tmppath)//'\\'//'coord')
          call env%wrtCHRG(trim(tmppath))   
          call copysub(env%fixfile,trim(tmppath))
          if(env%useqmdff)then
@@ -55,7 +55,7 @@ subroutine normalMD(fname,env,nr,newtemp,newtime)
          endif
 
          if(env%staticmtd)then
-             r = sylnk(trim(thispath)//'/'//env%mtdstaticfile,trim(tmppath)//'/'//env%mtdstaticfile)
+             r = sylnk(trim(thispath)//'\\'//env%mtdstaticfile,trim(tmppath)//'\\'//env%mtdstaticfile)
          endif
 
 
@@ -181,7 +181,7 @@ subroutine normalMD_para_OMP(env,lconf,ntemps)
          call getcwd(thispath)
 
          fname='coord'
-         pipe=' > xtb.out 2>/dev/null'
+         pipe=' > xtb.out 2>nul'
 
          write(jobcall,'(a,1x,a,1x,a,'' --md '',a,1x,a,a)') &
          &     trim(env%ProgName),trim(fname),trim(env%gfnver),trim(env%solv),pipe
@@ -241,7 +241,7 @@ subroutine normalMD_para_OMP(env,lconf,ntemps)
          write(tmppath,'(a,i0)')'NORMMD',vz
          call execute_command_line('cd '//trim(tmppath)//' && '//trim(jobcall), exitstat=io)
          write(*,'(a,i0,a)')'*MD ',vz,' finished*'
-         call rmrf(trim(tmppath)//'/scoord.*')
+         call rmrf(trim(tmppath)//'\\scoord.*')
        !$omp end task
       enddo
 !$omp taskwait
@@ -405,7 +405,7 @@ subroutine entropyMD_para_OMP(env)
          call getcwd(thispath)
 
          fname='coord'
-         pipe=' > xtb.out 2>/dev/null'
+         pipe=' > xtb.out 2>nul'
 
          write(jobcall,'(a,1x,a,1x,a,'' --md '',a,1x,a,a)') &
          &     trim(env%ProgName),trim(fname),trim(env%gfnver),trim(env%solv),pipe
@@ -465,14 +465,14 @@ subroutine entropyMD_para_OMP(env)
        !$omp end critical
          write(tmppath,'(a,i0)')'STATICMTD',vz
          call execute_command_line('cd '//trim(tmppath)//' && '//trim(jobcall), exitstat=io)
-         inquire(file=trim(tmppath)//'/'//'xtb.trj',exist=ex)
+         inquire(file=trim(tmppath)//'\\'//'xtb.trj',exist=ex)
          if(.not.ex .or. io.ne.0)then
          write(*,'(a,i0,a)')'*Warning: static MTD ',vz,' seemingly failed (no xtb.trj)*'
-         call system('cp -r '//trim(tmppath)//' FAILEDMTD')
+         call system('xcopy /D /E /R /Y /K "'//trim(tmppath)//'" FAILEDMTD >nul 2>nul')
          else
          write(*,'(a,i0,a)')'*static MTD ',vz,' finished*'
          endif
-         call rmrf(trim(tmppath)//'/'//'scoord.*')
+         call rmrf(trim(tmppath)//'\\'//'scoord.*')
        !$omp end task
       enddo
 !$omp taskwait
@@ -528,14 +528,14 @@ subroutine entropyMD(fname,env,nr,newtemp,newtime,k,alpha)
          call rmrf(tmppath)            !clear old directory
          r = makedir(trim(tmppath))    !make new directory
 
-         call rename(trim(fname),trim(tmppath)//'/'//'coord')
+         call rename(trim(fname),trim(tmppath)//'\\'//'coord')
          call env%wrtCHRG(trim(tmppath))   
          call copysub(env%fixfile,trim(tmppath))
          if(env%gfnver=='--gff')then
 !            r = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
          endif
 
-         r = sylnk(trim(thispath)//'/'//env%mtdstaticfile,trim(tmppath)//'/'//env%mtdstaticfile)
+         r = sylnk(trim(thispath)//'/'//env%mtdstaticfile,trim(tmppath)//'\\'//env%mtdstaticfile)
 
          call chdir(trim(tmppath))  !switch to working directory
 !---- do stuff here

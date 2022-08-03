@@ -73,7 +73,7 @@ subroutine confopt(env,xyz,TMPCONF,confcross)
       write(*,'(1x,i0,'' jobs to do.'')')TMPCONF
 
       solv=''
-      pipe='2>/dev/null'
+      pipe='2>nul'
       call getcwd(thispath)
       update=.true.
 
@@ -132,13 +132,13 @@ subroutine confopt(env,xyz,TMPCONF,confcross)
       if(.not.confcross)then
        do vz=1,TMPCONF
          write(tmppath,'(''TMPCONF'',i0)')vz
-         str=trim(tmppath)//'/'//'.xtboptok'
+         str=trim(tmppath)//'\\'//'.xtboptok'
          inquire(file=trim(str),exist=ex)
          if(ex)then
-         str=trim(tmppath)//'/'//'xtbopt.xyz'
+         str=trim(tmppath)//'\\'//'xtbopt.xyz'
          call rdxmol(trim(str),env%nat,at,c0,comment)
          if(env%reweight)then
-           str=trim(tmppath)//'/'//'xtb.out'
+           str=trim(tmppath)//'\\'//'xtb.out'
            call grepval(trim(str),'total energy',l1,energy)
            write(comment,'(2x,f18.8)') energy
          endif
@@ -148,13 +148,13 @@ subroutine confopt(env,xyz,TMPCONF,confcross)
       else
        do vz=1,TMPCONF
          write(tmppath,'(''TMPCONF'',i0)')vz
-         str=trim(tmppath)//'/'//'.xtboptok'
+         str=trim(tmppath)//'\\'//'.xtboptok'
          inquire(file=trim(str),exist=ex)
          if(ex)then
-         str=trim(tmppath)//'/'//'xtbopt.xyz'
+         str=trim(tmppath)//'\\'//'xtbopt.xyz'
          call rdxmol(trim(str),env%nat,at,c0,comment)
          if(env%reweight)then
-           str=trim(tmppath)//'/'//'xtb.out'
+           str=trim(tmppath)//'\\'//'xtb.out'
            call grepval(trim(str),'total energy',l1,energy)
            write(comment,'(2x,f18.8)') energy
          endif
@@ -305,9 +305,9 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
 
          verbose=.true.
          if(verbose)then
-           pipe=' 2>/dev/null'
+           pipe=' 2>nul'
          else
-           pipe=' > xtb.out 2>/dev/null'
+           pipe=' > xtb.out 2>nul'
          endif
 
 
@@ -336,7 +336,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
          call copysub('solvent',trim(optpath))
          endif
          if(env%gfnver=='--gff')then
-            l = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(optpath)//'/'//'gfnff_topo')
+            l = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
          endif
 
          call chdir(trim(optpath))
@@ -391,7 +391,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
          io = makedir(trim(tmppath))
          ich = vz + 1000
          !!$omp critical
-         ctmp=trim(tmppath)//'/'//trim(fname)
+         ctmp=trim(tmppath)//'\\'//trim(fname)
          open(unit=ich,file=ctmp)
               call wrxyz(ich,nat,at,xyz(:,:,vz))
               if(multilev.ge.0)then
@@ -432,7 +432,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
           close(ich)
 
           if(index(env%fixfile,'none selected').eq.0)then
-          io = sylnk(trim(optpath)//'/'//env%fixfile,trim(tmppath)//'/'//env%fixfile)
+          io = sylnk(trim(optpath)//'\\'//env%fixfile,trim(tmppath)//'\\'//env%fixfile)
           endif
 
           !$omp end critical
@@ -454,7 +454,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
          call copysub('solvent',trim(tmppath))
          endif
          if(env%gfnver=='--gff')then
-            io = sylnk(trim(optpath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
+            io = sylnk(trim(optpath)//'\\'//'gfnff_topo',trim(tmppath)//'\\'//'gfnff_topo')
          endif
 
        !-- run the optimization
@@ -462,7 +462,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
 
        !$omp critical
         !-- write structure to ensemble
-        ctmp=trim(tmppath)//'/'//'xtbopt.xyz'
+        ctmp=trim(tmppath)//'\\'//'xtbopt.xyz'
         inquire(file=trim(ctmp),exist=xo)
         if(xo)then
            allocate(at0(nat))
@@ -470,7 +470,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
            eread(vz) = grepenergy(btmp)
            deallocate(at0)
            if(env%reweight)then
-             ctmp=trim(tmppath)//'/'//'xtb.out'
+             ctmp=trim(tmppath)//'\\'//'xtb.out'
              call grepval(trim(ctmp),'total energy',l1,eread(vz))
            endif
         else   

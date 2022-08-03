@@ -172,8 +172,8 @@ subroutine tautomerize(env,tim)
      call smallhead('Final Geometry Optimization')
      call checkname_xyz('tautomerize',inpnam,outnam)
      call MDopt_para(env,inpnam,0)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         call sort_ens(taut,outnam,.false.)
         call remaining_in(outnam,taut%ewin,nallout) !--- remaining number of structures
@@ -249,8 +249,8 @@ subroutine protsmall(env,prot,tim)
      call smallhead('1. crude pre-optimization')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,protname,1)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         prot%ewin=prot%ewin*2.0d0
         call sort_ens(prot,outnam,.false.)
@@ -260,8 +260,8 @@ subroutine protsmall(env,prot,tim)
      call smallhead('2. loose optimization')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,inpnam,2)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         prot%ewin=prot%ewin/2.0d0
         call sort_ens(prot,outnam,.false.)
@@ -356,8 +356,8 @@ subroutine deprotens(ens,env,prot,tim)
      call smallhead('1. crude pre-optimization')
      call checkname_xyz('deprotonate',inpnam,outnam)
      call MDopt_para(env,protname,1)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         prot%ewin=prot%ewin*2.0d0
         call sort_ens(prot,outnam,.false.)
@@ -367,8 +367,8 @@ subroutine deprotens(ens,env,prot,tim)
      call smallhead('2. loose optimization')
      call checkname_xyz('deprotonate',inpnam,outnam)
      call MDopt_para(env,inpnam,2)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         prot%ewin=prot%ewin/2.0d0
         call sort_ens(prot,outnam,.false.)
@@ -457,7 +457,7 @@ subroutine protens(ens,env,prot,tim)
 
 !--- creating the job
       write(jobcall,'(a,1x,a,1x,a,'' --sp --lmo '',a,1x,a,a)') &
-      &     trim(env%ProgName),'coord',trim(env%gfnver),trim(env%solv),' > xtb.out 2>/dev/null'
+      &     trim(env%ProgName),'coord',trim(env%gfnver),trim(env%solv),' > xtb.out 2>nul'
 
 
 !--- calculation loop for LMOs
@@ -500,7 +500,7 @@ subroutine protens(ens,env,prot,tim)
        endif
        write(*,*)
        write(*,'(a)',advance='no') 'Collecting generated protomers ...'
-       jobcall=trim(tmppath)//'/'//'protomers.xyz'
+       jobcall=trim(tmppath)//'\\'//'protomers.xyz'
        do i=1,nall
           write(filename,'(a,i0)')trim(dirn),i
           call chdir(trim(filename))
@@ -533,8 +533,8 @@ subroutine protens(ens,env,prot,tim)
      call smallhead('1. crude pre-optimization')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,'protomers.xyz',1)
-        filename=trim(tmppath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(tmppath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         prot%ewin=prot%ewin*2.0d0
         call sort_ens(prot,outnam,.false.)
@@ -544,8 +544,8 @@ subroutine protens(ens,env,prot,tim)
      call smallhead('2. loose optimization')
      call checkname_xyz('protonate',inpnam,outnam)
      call MDopt_para(env,inpnam,2)
-        filename=trim(tmppath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(tmppath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         prot%ewin=prot%ewin/2.0d0
         call sort_ens(prot,outnam,.false.)
@@ -560,7 +560,7 @@ subroutine protens(ens,env,prot,tim)
 
 !--- change back to original dir and copy the file with optimized protomers
      call chdir(thispath)
-     write(jobcall,'(a,a,a)')trim(tmppath),'/','protonated.xyz'
+     write(jobcall,'(a,a,a)')trim(tmppath),'\\','protonated.xyz'
      call rename(trim(jobcall),'protonated.xyz')
      call rmrf(dirn)
      return
@@ -831,7 +831,7 @@ subroutine tautomerize_ext(ensemb,env,tim)
 
       call chdir(thispath)
 
-      btmp=trim(btmp)//'/'//trim(outnam)
+      btmp=trim(btmp)//'\\'//trim(outnam)
       call appendto(btmp,'collected.xyz')
 !-------------------------
       enddo SLOOP
@@ -861,8 +861,8 @@ subroutine tautomerize_ext(ensemb,env,tim)
      call rename('collected.xyz',inpnam)
 
      call MDopt_para(env,inpnam,0)
-        filename=trim(thispath)//'/'//trim(outnam)
-        call rename('OPTIM'//'/'//'opt.xyz',trim(filename))
+        filename=trim(thispath)//'\\'//trim(outnam)
+        call rename('OPTIM'//'\\'//'opt.xyz',trim(filename))
         call rmrf('OPTIM')
         call sort_ens(taut,outnam,.false.)
         call remaining_in(outnam,taut%ewin,nallout) !--- remaining number of structures

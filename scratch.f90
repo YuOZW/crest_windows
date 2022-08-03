@@ -30,7 +30,9 @@ subroutine scrdir(env)
       integer :: ich,io
 
       if(len_trim(env%scratchdir).lt.1)then
-         call execute_command_line('mktemp -d > tmpconf 2>/dev/null', exitstat=io)
+         !call execute_command_line('mktemp -d > tmpconf 2>nul', exitstat=io)
+         call execute_command_line('mkdir __temp', exitstat=io)
+         call execute_command_line('echo __temp > tmpconf', exitstat=io)
          open(newunit=ich,file='tmpconf')
          read(ich,'(a)',iostat=io) env%scratchdir
          if(io < 0 ) then   ! if mktemp failed and tmpconf is empty
@@ -45,19 +47,19 @@ subroutine scrdir(env)
       io = makedir(trim(env%scratchdir))
 
       if (env%crestver .eq. crest_solv) then
-         call copy('solute',trim(env%scratchdir)//'/'//'solute')
-         call copy('solvent',trim(env%scratchdir)//'/'//'solvent')
+         call copy('solute',trim(env%scratchdir)//'\\'//'solute')
+         call copy('solvent',trim(env%scratchdir)//'\\'//'solvent')
       else
-         call copy('coord',trim(env%scratchdir)//'/'//'coord')
+         call copy('coord',trim(env%scratchdir)//'\\'//'coord')
       end if
-      call copy('.CHRG',trim(env%scratchdir)//'/'//'.CHRG')
-      call copy('.UHF',trim(env%scratchdir)//'/'//'.UHF')
-      call copy(env%fixfile,trim(env%scratchdir)//'/'//trim(env%fixfile))
-      call copy(env%ensemblename,trim(env%scratchdir)//'/'//trim(env%ensemblename))
-      call copy(env%constraints,trim(env%scratchdir)//'/'//trim(env%constraints))
-      call copy(trim(env%fixfile),trim(env%scratchdir)//'/'//trim(env%fixfile))
+      call copy('.CHRG',trim(env%scratchdir)//'\\'//'.CHRG')
+      call copy('.UHF',trim(env%scratchdir)//'\\'//'.UHF')
+      call copy(env%fixfile,trim(env%scratchdir)//'\\'//trim(env%fixfile))
+      call copy(env%ensemblename,trim(env%scratchdir)//'\\'//trim(env%ensemblename))
+      call copy(env%constraints,trim(env%scratchdir)//'\\'//trim(env%constraints))
+      call copy(trim(env%fixfile),trim(env%scratchdir)//'\\'//trim(env%fixfile))
 
-      io = sylnk(trim(env%scratchdir),'./scratch')
+      io = sylnk(trim(env%scratchdir),'.\\scratch')
 
       call chdir(trim(env%scratchdir))
 
@@ -76,22 +78,22 @@ subroutine scrend(env)
          return
       endif
 
-      call copy(trim(env%scratchdir)//'/'//'coord','coord')
-      call copy(trim(env%scratchdir)//'/'//conformerfile,conformerfile)
-      call checkname_xyz(trim(env%scratchdir)//'/'//crefile,crefi,crefi2)
+      call copy(trim(env%scratchdir)//'\\'//'coord','coord')
+      call copy(trim(env%scratchdir)//'\\'//conformerfile,conformerfile)
+      call checkname_xyz(trim(env%scratchdir)//'\\'//crefile,crefi,crefi2)
       call copy(trim(crefi),crefile//'.xyz')
 
-      inquire(file=trim(env%scratchdir)//'/'//conformerfilebase//'.sdf',exist=ex)
+      inquire(file=trim(env%scratchdir)//'\\'//conformerfilebase//'.sdf',exist=ex)
       if(ex)then
-        call copy(trim(env%scratchdir)//'/'//conformerfilebase//'.sdf',conformerfilebase//'.sdf')
+        call copy(trim(env%scratchdir)//'\\'//conformerfilebase//'.sdf',conformerfilebase//'.sdf')
       endif
 
-      inquire(file=trim(env%scratchdir)//'/'//'crest_ensemble.xyz',exist=ex)
+      inquire(file=trim(env%scratchdir)//'\\'//'crest_ensemble.xyz',exist=ex)
       if(ex)then
-        call copy(trim(env%scratchdir)//'/'//'crest_ensemble.xyz','crest_ensemble.xyz')
+        call copy(trim(env%scratchdir)//'\\'//'crest_ensemble.xyz','crest_ensemble.xyz')
       endif
 
-      call system('cp -r '//trim(env%scratchdir)//'/* ./')
+      call system('xcopy /D /E /R /Y /K "'//trim(env%scratchdir)//'\\*" .\\ >nul 2>nul')
 
       if(.not.env%keepScratch)then
       call rmrf(env%scratchdir)
