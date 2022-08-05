@@ -292,7 +292,7 @@ subroutine MetaMD(env,nr,mdtime,fac,expo,dumplist)
             call copysub('solvent',trim(tmppath))
          endif
          if(env%gfnver=='--gff')then
-!            l = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
+!            l = sylnk_file(trim(thispath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
          endif
 
          call chdir(trim(tmppath))  !switch to working directory
@@ -481,7 +481,7 @@ subroutine MDopt_para(env,ensnam,multilev)
          call copysub('solvent',trim(optpath))
          endif
          if(env%gfnver=='--gff')then
-            l = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
+            l = sylnk_file(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
          endif
 
 
@@ -537,7 +537,7 @@ subroutine MDopt_para(env,ensnam,multilev)
          call copysub('solvent',trim(ctmp))
          endif
          if(env%gfnver=='--gff')then
-            l = sylnk(trim(optpath)//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
+            l = sylnk_file(trim(optpath)//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
          endif
       enddo
       write(*,'(1x,a)') 'done.'

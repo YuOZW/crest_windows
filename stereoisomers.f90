@@ -1041,12 +1041,12 @@ subroutine optstruc(nat,at,xyz)
 
       !call system('rm -r DUMMY 2>nul')
       !call execute_command_line('rm -r DUMMY 2>nul', exitstat=io)
-      call execute_command_line('rd /s /q DUMMY', exitstat=io)
+      !call execute_command_line('rd /s /q DUMMY', exitstat=io)
 
       call getcwd(thispath)
       r = makedir('DUMMY')
-      l = sylnk(trim(thispath)//'\\'//'gfnff_topo','DUMMY'//'\\'//'gfnff_topo')
-      l = sylnk(trim(thispath)//'\\'//'bondlengths','DUMMY'//'\\'//'constraints')
+      l = sylnk_file(trim(thispath)//'\\'//'gfnff_topo','DUMMY'//'\\'//'gfnff_topo')
+      l = sylnk_file(trim(thispath)//'\\'//'bondlengths','DUMMY'//'\\'//'constraints')
       call chdir('DUMMY')
       call wrc0('coord',nat,at,xyz)
 

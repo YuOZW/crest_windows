@@ -354,9 +354,9 @@ subroutine thermo_wrap(env,pr,nat,at,xyz,dirname, &
     inquire(file='gfnff_topo',exist=ex)
     if(env%gfnver=='--gff' .and. subdir .and.ex)then
         call getcwd(thispath)
-        io = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'gfnff_topo')
+        io = sylnk_file(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'gfnff_topo')
     endif
-    io = sylnk(trim(thispath)//'\\'//env%fixfile,trim(optpath)//env%fixfile)
+    io = sylnk_file(trim(thispath)//'\\'//env%fixfile,trim(optpath)//env%fixfile)
 
 !$omp critical
     open(unit=ich,file=trim(optpath)//xname)
@@ -587,9 +587,9 @@ subroutine calcSrrhoav(env,ensname)
     call chdir('HESSIANS')
     if(env%gfnver=='--gff' .and.ex)then
     call getcwd(tmppath)
-    io = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(tmppath)//'\\'//'gfnff_topo')
+    io = sylnk_file(trim(thispath)//'\\'//'gfnff_topo',trim(tmppath)//'\\'//'gfnff_topo')
     endif
-    io = sylnk(trim(thispath)//'\\'//env%fixfile,trim(tmppath)//'\\'//env%fixfile)
+    io = sylnk_file(trim(thispath)//'\\'//env%fixfile,trim(tmppath)//'\\'//env%fixfile)
 
     k=0
     niceprint=env%niceprint

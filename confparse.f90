@@ -105,14 +105,14 @@ subroutine parseflags(env,arg,nra)
 !>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
 !========================================================================================!
 !>--- parallelization stuff
-  env%Threads = 4                !> total number of threads
-  env%MAXRUN = 4                 !> number of parallel xtb jobs
+  env%threads = 2                !> total number of threads
+  env%MAXRUN = 2                 !> number of parallel xtb jobs
   env%omp = 1                    !> # of OMP_NUM_THREADS and MKL_NUMTHREADS to be used
   env%autothreads = .false.      !> automatically determine optimal parameters omp and MAXRUN
   env%threadssetmanual = .false. !> did the user set the #threads manually?
 
-  env%scratch = .false.        !> use scratch directory?
-  env%scratchdir = ''            !> directory that shall be used for scratch
+  env%scratch = .true.        !> use scratch directory?
+  env%scratchdir = 'scratch'            !> directory that shall be used for scratch
 
 !>--- xtb settings
   env%ProgName = 'xtb'           !> the name of the xtb executable used per default

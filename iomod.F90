@@ -63,11 +63,25 @@ integer function win_setenv(name,VALUE)
     win_setenv=0
 end function win_setenv
 
-integer function win_symlink(old,new)
+!integer function win_symlink(old,new)
+!    character(*) :: old
+!    character(*) :: new
+!    call execute_command_line('mklink "'//new//'" "'//old//'" >nul 2>nul', exitstat=win_symlink)
+!end function win_symlink
+
+integer function win_symlink_file(old,new)
     character(*) :: old
     character(*) :: new
-    call execute_command_line('symlink.bat "'//old//'" "'//new//'" >nul 2>nul', exitstat=win_symlink)
-end function win_symlink
+    call execute_command_line('mklink /h "'//new//'" "'//old//'" >nul 2>nul', exitstat=win_symlink_file) !haed link version
+    !call execute_command_line('mklink "'//new//'" "'//old//'" >nul 2>nul', exitstat=win_symlink_file) !symbolic link version
+end function win_symlink_file
+
+integer function win_symlink_dir(old,new)
+    character(*) :: old
+    character(*) :: new
+    call execute_command_line('mklink /j "'//new//'" "'//old//'" >nul 2>nul', exitstat=win_symlink_dir) !junction version
+    !call execute_command_line('mklink "'//new//'" "'//old//'" >nul 2>nul', exitstat=win_symlink_dir) !symbolic link version
+end function win_symlink_dir
 
 !-------------------------------------------------------------
 ! remove file 'fname'
@@ -300,14 +314,32 @@ end subroutine appendto
 !-------------------------------------------------------------------------
 ! set a symlink from path1 to path2  via iso_c_binding
 !-------------------------------------------------------------------------
- function sylnk(path1,path2)
-      implicit none
-      integer :: sylnk
-      character(len=*) :: path1
-      character(len=*) :: path2
-      sylnk = win_symlink(trim(path1),trim(path2)) !create new directory
-      return
- end function sylnk
+!function sylnk(path1,path2)
+!     implicit none
+!     integer :: sylnk
+!     character(len=*) :: path1
+!     character(len=*) :: path2
+!     sylnk = win_symlink(trim(path1),trim(path2)) !create new directory
+!     return
+!end function sylnk
+
+function sylnk_file(path1,path2)
+    implicit none
+    integer :: sylnk_file
+    character(len=*) :: path1
+    character(len=*) :: path2
+    sylnk_file = win_symlink_file(trim(path1),trim(path2))
+    return
+end function sylnk_file
+
+function sylnk_dir(path1,path2)
+    implicit none
+    integer :: sylnk_dir
+    character(len=*) :: path1
+    character(len=*) :: path2
+    sylnk_dir = win_symlink_file(trim(path1),trim(path2))
+    return
+end function sylnk_dir
 
 !-------------------------------------------------------------------------
 ! minigrep: a grep subroutine that returns true or false, depending on

@@ -338,7 +338,7 @@ subroutine MTDsample(env,tim)
        coordname=trim(mtddir)//'\\'//'coord'
        call wrc0(coordname,ens%nat,ens%at,ens%xyz(1:3,1:ens%nat,i))
        if(env%gfnver=='--gff')then
-          l = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(mtddir)//'\\'//'gfnff_topo')
+          l = sylnk_file(trim(thispath)//'\\'//'gfnff_topo',trim(mtddir)//'\\'//'gfnff_topo')
        endif
        call setMDrun2(coordname,hmass,mdtime,mdtemp,mdstep,shake,mddumpxyz, &
       &             mdskip,mddump,-1,env%cts)

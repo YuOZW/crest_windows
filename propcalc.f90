@@ -200,7 +200,7 @@ subroutine propcalc(iname,imode,env,tim)
          call copysub('solvent',trim(optpath))
          endif
          if(env%gfnver=='--gff')then
-            r = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
+            r = sylnk_file(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
          endif
 
 
@@ -238,7 +238,7 @@ subroutine propcalc(iname,imode,env,tim)
          call copysub('solvent',trim(ctmp))
          endif
          if(env%gfnver=='--gff')then
-            r = sylnk(trim(optpath)//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
+            r = sylnk_file(trim(optpath)//'\\'//'gfnff_topo',trim(ctmp)//'\\'//'gfnff_topo')
          endif
 
          ii=ii+1

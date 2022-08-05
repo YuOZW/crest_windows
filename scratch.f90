@@ -59,7 +59,7 @@ subroutine scrdir(env)
       call copy(env%constraints,trim(env%scratchdir)//'\\'//trim(env%constraints))
       call copy(trim(env%fixfile),trim(env%scratchdir)//'\\'//trim(env%fixfile))
 
-      io = sylnk(trim(env%scratchdir),'.\\scratch')
+      io = sylnk_dir(trim(env%scratchdir),'.\\scratch')
 
       call chdir(trim(env%scratchdir))
 
@@ -93,7 +93,9 @@ subroutine scrend(env)
         call copy(trim(env%scratchdir)//'\\'//'crest_ensemble.xyz','crest_ensemble.xyz')
       endif
 
-      call system('xcopy /D /E /R /Y /K "'//trim(env%scratchdir)//'\\*" .\\ >nul 2>nul')
+      !call system('xcopy /D /E /R /Y /K "'//trim(env%scratchdir)//'\\*" .\\ >nul 2>nul')
+      call copy(trim(env%scratchdir)//'\\'//'crest.energies','crest.energies')
+      call copy(trim(env%scratchdir)//'\\'//'crest_best.xyz','crest_best.xyz')
 
       if(.not.env%keepScratch)then
       call rmrf(env%scratchdir)

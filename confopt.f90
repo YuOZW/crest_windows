@@ -336,7 +336,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
          call copysub('solvent',trim(optpath))
          endif
          if(env%gfnver=='--gff')then
-            l = sylnk(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
+            l = sylnk_file(trim(thispath)//'\\'//'gfnff_topo',trim(optpath)//'\\'//'gfnff_topo')
          endif
 
          call chdir(trim(optpath))
@@ -432,7 +432,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
           close(ich)
 
           if(index(env%fixfile,'none selected').eq.0)then
-          io = sylnk(trim(optpath)//'\\'//env%fixfile,trim(tmppath)//'\\'//env%fixfile)
+          io = sylnk_file(trim(optpath)//'\\'//env%fixfile,trim(tmppath)//'\\'//env%fixfile)
           endif
 
           !$omp end critical
@@ -454,7 +454,7 @@ subroutine MDopt_para_inplace(env,ensnam,multilev)
          call copysub('solvent',trim(tmppath))
          endif
          if(env%gfnver=='--gff')then
-            io = sylnk(trim(optpath)//'\\'//'gfnff_topo',trim(tmppath)//'\\'//'gfnff_topo')
+            io = sylnk_file(trim(optpath)//'\\'//'gfnff_topo',trim(tmppath)//'\\'//'gfnff_topo')
          endif
 
        !-- run the optimization

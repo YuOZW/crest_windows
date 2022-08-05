@@ -174,10 +174,10 @@ subroutine xtbmodef(env,s,e,n,u,l,o,x)
          call clearmodef()
 
           str=trim(thispath)//'\\'//'xtb_normalmodes'
-          io = sylnk(trim(str),'xtb_normalmodes')
+          io = sylnk_file(trim(str),'xtb_normalmodes')
 
           str=trim(thispath)//'\\'//'xtb_localmodes'
-          io = sylnk(trim(str),'xtb_localmodes')
+          io = sylnk_file(trim(str),'xtb_localmodes')
 
          call chdir(thispath)
       end do

@@ -37,14 +37,14 @@ subroutine rmrf(dataname)
     integer :: io
     !call system('rm -rf '//trim(dataname)//' 2>nul')
     !call execute_command_line('rm -rf '//trim(dataname)//' 2>nul', exitstat=io)
-    call execute_command_line('@echo off & del /f /q '//trim(dataname)//' >nul 2>nul', exitstat=io)
-    if(index(dataname,'*').eq.0)then
-        call execute_command_line('@echo off & rd /s /q '//trim(dataname)//' >nul 2>nul', exitstat=io)
-    else
-!        call execute_command_line("@echo off & for /f %i in ('dir /a:d /b "//trim(dataname) &
-!            //" 2>nul') do (rd /s /q %i >nul 2>nul)", exitstat=io)
-        call execute_command_line('@echo off & for /d %i in ('//trim(dataname)//') do (rd /s /q %i >nul 2>nul)', exitstat=io)
-    endif
+    !call execute_command_line('@echo off & del /f /q '//trim(dataname)//' >nul 2>nul', exitstat=io)
+    !if(index(dataname,'*').eq.0)then
+    !    call execute_command_line('@echo off & rd /s /q '//trim(dataname)//' >nul 2>nul', exitstat=io)
+    !else
+    !    call execute_command_line("@echo off & for /f %i in ('dir /a:d /b "//trim(dataname) &
+    !         //" 2>nul') do (rd /s /q %i >nul 2>nul)", exitstat=io)
+    !    call execute_command_line('@echo off & for /d %i in ('//trim(dataname)//') do (rd /s /q %i >nul 2>nul)', exitstat=io)
+    !endif
     return
 end subroutine rmrf
 
@@ -235,16 +235,16 @@ subroutine cleanDFT(TMPCONF)
     character(len=:),allocatable :: pipe
     character(len=10) :: nmmr
     integer :: i,io
-    pipe=' 2>nul'
-    do i=1,TMPCONF
-        write(nmmr,'(i0)')i
-        !str='cd TMPCONF'//trim(nmmr)//' && rm -rf '
-        str='cd TMPCONF'//trim(nmmr)//' && del /f /q '
-        !call system(str//'mos'//pipe)
-        call execute_command_line(str//'mos'//pipe, exitstat=io)
-        !call system(str//'dh'//pipe)
-        call execute_command_line(str//'dh'//pipe, exitstat=io)
-    enddo
+    !pipe=' 2>nul'
+    !do i=1,TMPCONF
+    !    write(nmmr,'(i0)')i
+    !    !str='cd TMPCONF'//trim(nmmr)//' && rm -rf '
+    !    str='cd TMPCONF'//trim(nmmr)//' && del /f /q '
+    !    !call system(str//'mos'//pipe)
+    !    call execute_command_line(str//'mos'//pipe, exitstat=io)
+    !    !call system(str//'dh'//pipe)
+    !    call execute_command_line(str//'dh'//pipe, exitstat=io)
+    !enddo
     return
 end subroutine cleanDFT
 

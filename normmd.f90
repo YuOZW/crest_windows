@@ -55,7 +55,7 @@ subroutine normalMD(fname,env,nr,newtemp,newtime)
          endif
 
          if(env%staticmtd)then
-             r = sylnk(trim(thispath)//'\\'//env%mtdstaticfile,trim(tmppath)//'\\'//env%mtdstaticfile)
+             r = sylnk_file(trim(thispath)//'\\'//env%mtdstaticfile,trim(tmppath)//'\\'//env%mtdstaticfile)
          endif
 
 
@@ -532,10 +532,10 @@ subroutine entropyMD(fname,env,nr,newtemp,newtime,k,alpha)
          call env%wrtCHRG(trim(tmppath))   
          call copysub(env%fixfile,trim(tmppath))
          if(env%gfnver=='--gff')then
-!            r = sylnk(trim(thispath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
+!            r = sylnk_file(trim(thispath)//'/'//'gfnff_topo',trim(tmppath)//'/'//'gfnff_topo')
          endif
 
-         r = sylnk(trim(thispath)//'/'//env%mtdstaticfile,trim(tmppath)//'\\'//env%mtdstaticfile)
+         r = sylnk_file(trim(thispath)//'/'//env%mtdstaticfile,trim(tmppath)//'\\'//env%mtdstaticfile)
 
          call chdir(trim(tmppath))  !switch to working directory
 !---- do stuff here

@@ -19,6 +19,8 @@ make PREFIX=~/bin/OpenBLAS-0.3.17 install
 - 文字化けする文字を変更
 - iomod.F90内の`symlink`関数を`symlink.bat`を呼び出す形でWindows用に変更
 - iomod.F90内の`setenv`関数はWindows用に変更できなかったため無効化
+- Windowsのセキュリティに引っかかるためファイル削除機能を無効化
+- デフォルトでscratchディレクトリを使用するように変更
 
 ```
 make
@@ -27,4 +29,3 @@ make
 - libgcc_s_seh-1.dll
 - libgfortran-5.dll
 - libgomp-1.dll
-

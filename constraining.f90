@@ -563,7 +563,7 @@ subroutine write_cts_biasext(ich,cts)
   integer :: ich
 !---- do it only if constaints are given
   if (cts%usermsdpot) then
-    !l = sylnk(cts%rmsdpotfile,'rmsdpot.xyz')
+!    l = sylnk_file(cts%rmsdpotfile,'rmsdpot.xyz')
     write (ich,'(a)') '$metadyn'
 !        write(ich,'(2x,a,a)') 'bias_input=rmsdpot.xyz'
     write (ich,'(2x,a,a)') 'bias_input=',cts%rmsdpotfile
